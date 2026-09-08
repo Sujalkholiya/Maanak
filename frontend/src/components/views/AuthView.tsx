@@ -40,7 +40,7 @@ export const AuthView: React.FC<AuthViewProps> = ({ onLoginSuccess }) => {
                 GOVERNMENT REGULATORY TECHNOLOGY
               </span>
               <h1 className="text-2xl font-black text-white tracking-wider">
-                METROSCAN
+                MAANAK
               </h1>
               <p className="text-xs font-semibold text-slate-300">
                 Legal Metrology Compliance Intelligence Platform

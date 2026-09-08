@@ -70,17 +70,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-64 bg-[#0B192C] text-slate-200 flex flex-col shrink-0 border-r border-slate-800 select-none">
       {/* Top Emblem & Branding */}
       <div className="p-4 border-b border-slate-800/80 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-blue-900/40 border border-blue-400/30 shrink-0">
-          <ShieldCheck className="w-5 h-5 text-blue-100" />
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center p-2 shadow-md shadow-blue-900/40 border border-blue-400/30 shrink-0 overflow-hidden">
+          <img
+            src="/sunburst.png"
+            alt="Maanak Symbol"
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5">
-            <h1 className="font-extrabold tracking-wider text-sm text-white">METROSCAN</h1>
-            <span className="text-[9px] font-mono font-semibold px-1.5 py-0.2 bg-blue-950 text-blue-300 rounded border border-blue-800/60 leading-none">
-              SIH26034
-            </span>
-          </div>
-          <p className="text-[10px] text-slate-400 font-medium truncate uppercase tracking-tight mt-0.5">
+          <h1 className="font-extrabold tracking-wider text-base text-white leading-none">
+            MAANAK
+          </h1>
+          <p className="text-[10px] text-slate-400 font-medium truncate uppercase tracking-tight mt-1">
             Legal Metrology Compliance
           </p>
         </div>

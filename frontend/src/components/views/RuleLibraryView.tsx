@@ -53,7 +53,7 @@ export const RuleLibraryView: React.FC = () => {
         <div className="font-bold text-blue-950 text-sm mb-1">
           Regulatory Temporal Integrity
         </div>
-        "Regulatory rules can change. METROSCAN evaluates against the selected/current applicable rule version rather than assuming the original 2011 rules remain unchanged. Pre-printed packaging manufactured prior to an amendment is evaluated under its effective historical epoch."
+        "Regulatory rules can change. MAANAK evaluates against the selected/current applicable rule version rather than assuming the original 2011 rules remain unchanged. Pre-printed packaging manufactured prior to an amendment is evaluated under its effective historical epoch."
       </div>
 
       {/* Version Selector Tabs & Search */}

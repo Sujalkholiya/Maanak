@@ -70,7 +70,7 @@ export const SettingsView: React.FC = () => {
             </div>
             <div className="flex justify-between">
               <span>Local Model Engine:</span>
-              <span className="font-mono text-slate-900">METROSCAN-Vision-Edge v4.2</span>
+              <span className="font-mono text-slate-900">MAANAK-Vision-Edge v4.2</span>
             </div>
             <div className="flex justify-between">
               <span>Language Models:</span>

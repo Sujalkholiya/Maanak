@@ -71,7 +71,7 @@ export function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-100 font-sans text-slate-900">
+    <div className="flex h-screen w-full overflow-hidden bg-slate-100 font-sans text-slate-900">
       {/* Desktop Sidebar (hidden on mobile) */}
       <div className="hidden lg:flex shrink-0">
         <Sidebar
@@ -109,7 +109,7 @@ export function App() {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
         {/* MAIN HEADER / CONTROL BAR (Single minimal row: Search, Status, Demo Mode, Notifications, Profile) */}
         <TopBar
           onOpenSearch={() => setIsSearchOpen(true)}

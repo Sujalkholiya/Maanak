@@ -831,7 +831,7 @@ export const MOCK_AUDIT_LOGS: AuditEvent[] = [
   {
     id: 'AUD-9911',
     timestamp: '2026-09-08 10:14:38 IST',
-    actor: 'METROSCAN Engine v4.2',
+    actor: 'MAANAK Engine v4.2',
     actorRole: 'Automated Service',
     action: 'OCR_AND_DECLARATIONS_EXTRACTED',
     caseId: 'CASE-2026-0841',
@@ -842,7 +842,7 @@ export const MOCK_AUDIT_LOGS: AuditEvent[] = [
   {
     id: 'AUD-9912',
     timestamp: '2026-09-08 10:15:02 IST',
-    actor: 'METROSCAN Engine v4.2',
+    actor: 'MAANAK Engine v4.2',
     actorRole: 'Automated Service',
     action: 'APPLICABILITY_COMPUTED',
     caseId: 'CASE-2026-0841',
