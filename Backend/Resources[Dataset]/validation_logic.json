@@ -1,0 +1,752 @@
+[
+  {
+    "validation_id": "VAL_MFR_DECLARATION",
+    "legal_rule_id": "INT_PCR_MFR_DECLARATION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "manufacturer_name",
+      "manufacturer_address",
+      "package_category",
+      "retail_or_institutional",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml'])",
+    "validation_logic": "if not manufacturer_name:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing manufacturer name'\nif not manufacturer_address:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing manufacturer address'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify name and address details against the official registration registry'",
+    "threshold": 10.0,
+    "unit": "cubic_centimeter",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "PARTIALLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing the manufacturer name and address panel",
+    "source_rule": "Rule 6(1)(a) & Rule 10",
+    "source_page": "11, 22-23",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_COUNTRY_OF_ORIGIN",
+    "legal_rule_id": "INT_PCR_COUNTRY_OF_ORIGIN",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "imported",
+      "country_of_origin",
+      "retail_or_institutional",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "imported == True and retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml'])",
+    "validation_logic": "if not country_of_origin:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing country of origin on imported package'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify authenticity of country of origin against the Bill of Entry'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing country of origin text declaration",
+    "source_rule": "Rule 6(1)(aa)",
+    "source_page": "10",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_GENERIC_NAME",
+    "legal_rule_id": "INT_PCR_GENERIC_NAME",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "generic_name",
+      "retail_or_institutional",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml'])",
+    "validation_logic": "if not generic_name:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing common or generic name of commodity'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify if generic name matches standard trade categories'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing the principal display panel or product identity panel",
+    "source_rule": "Rule 6(1)(b)",
+    "source_page": "11, 16",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_NET_QUANTITY_DECLARATION",
+    "legal_rule_id": "INT_PCR_NET_QUANTITY_DECLARATION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "net_quantity",
+      "unit",
+      "retail_or_institutional"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL'",
+    "validation_logic": "if not net_quantity or not unit:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing net quantity or unit declaration'\nif unit not in ['g', 'gram', 'kg', 'kilogram', 'ml', 'millilitre', 'l', 'L', 'litre', 'm', 'metre', 'cm', 'centimetre', 'N', 'U', 'number', 'unit', 'piece', 'set', 'pair']:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Invalid net quantity unit used'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Physical weighing/measurement of net quantity is required to prove compliance'",
+    "threshold": 10.0,
+    "unit": "g_or_ml",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing net quantity text declaration on PDP",
+    "source_rule": "Rule 6(1)(c) & Rules 11-13",
+    "source_page": "11, 23-25",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_MFG_DATE_DECLARATION",
+    "legal_rule_id": "INT_PCR_MFG_DATE_DECLARATION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION",
+      "APP_RULE_WARRANTY_SPARES_DATE_EXEMPTION"
+    ],
+    "input_fields": [
+      "manufacture_or_packing_date",
+      "retail_or_institutional",
+      "net_quantity",
+      "unit",
+      "commodity_category",
+      "is_warranty_spare",
+      "is_sold_to_end_customer"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml']) and not (is_warranty_spare == True and is_sold_to_end_customer == False) and commodity_category not in ['bidi', 'incense_sticks', 'domestic_lpg']",
+    "validation_logic": "if not manufacture_or_packing_date:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing month and year of manufacture'\nimport re\npattern = r'\\b(?:0[1-9]|1[0-2]|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[/-]?(?:\\d{4}|\\d{2})\\b'\nif not re.search(pattern, manufacture_or_packing_date, re.IGNORECASE):\n    return 'POTENTIAL_NON_COMPLIANCE', 'Invalid manufacture date format'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify actual physical batch production logs'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing the embossed, printed or stamped manufacture date",
+    "source_rule": "Rule 6(1)(d)",
+    "source_page": "3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_EXPIRY_DECLARATION",
+    "legal_rule_id": "INT_PCR_EXPIRY_DECLARATION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "best_before",
+      "use_by",
+      "retail_or_institutional",
+      "commodity_category",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml']) and commodity_category in ['food', 'perishable', 'beverage']",
+    "validation_logic": "if not best_before and not use_by:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Perishable items must declare best before or use by date'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Check food safety or drugs act overrides for specialized perishable items'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing best before or use by date declarations",
+    "source_rule": "Rule 6(1)(da)",
+    "source_page": "10",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_MRP_DECLARATION",
+    "legal_rule_id": "INT_PCR_MRP_DECLARATION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "MRP",
+      "mrp_currency",
+      "mrp_taxes_inclusion",
+      "retail_or_institutional",
+      "net_quantity",
+      "unit",
+      "commodity_category"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml']) and commodity_category != 'bidi'",
+    "validation_logic": "if not MRP:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing retail sale price (MRP)'\nif not mrp_currency:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing currency symbol or text (Rs / INR / \u20b9)'\nif not mrp_taxes_inclusion:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing \"inclusive of all taxes\" declaration text'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify MRP sticker alterations or price differences on shelves'",
+    "threshold": null,
+    "unit": "INR",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "PARTIALLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing MRP declaration on principal display panel",
+    "source_rule": "Rule 6(1)(e) & Rule 18(2)",
+    "source_page": "3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_CONSUMER_CARE_DECLARATION",
+    "legal_rule_id": "INT_PCR_CONSUMER_CARE_DECLARATION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "consumer_care_name",
+      "consumer_care_address",
+      "consumer_care_phone",
+      "consumer_care_email",
+      "retail_or_institutional",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml'])",
+    "validation_logic": "if not consumer_care_name:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing contact person or office name'\nif not consumer_care_address:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing contact physical address'\nif not consumer_care_phone:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing contact telephone number'\nif not consumer_care_email:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing contact e-mail address'\nimport re\nemail_pattern = r'^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}'\nif not re.match(email_pattern, consumer_care_email):\n    return 'POTENTIAL_NON_COMPLIANCE', 'Invalid consumer care email format'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify if helpline phone is active and email inbox is functional'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Label image showing consumer care information block",
+    "source_rule": "Rule 6(2)",
+    "source_page": "19",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_UNIT_SALE_PRICE",
+    "legal_rule_id": "INT_PCR_UNIT_SALE_PRICE",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION",
+      "APP_RULE_USP_EXEMPTION_MRP_EQUALS_USP",
+      "APP_RULE_USP_EXEMPTION_PROMOTIONAL_COMBINATIONS"
+    ],
+    "input_fields": [
+      "unit_sale_price_value",
+      "unit_sale_price_uom",
+      "MRP",
+      "net_quantity",
+      "unit",
+      "retail_or_institutional",
+      "package_category"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml']) and net_quantity != 1.0 and package_category not in ['combination_package', 'group_package', 'multi_piece_package']",
+    "validation_logic": "if not unit_sale_price_value or not unit_sale_price_uom:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing Unit Sale Price (USP) declaration'\nexpected_usp = MRP / net_quantity\nif abs(unit_sale_price_value - expected_usp) > 0.05:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Declared USP does not mathematically match MRP and net quantity'\nreturn 'COMPLIANT', 'Unit sale price is compliant'",
+    "threshold": 2,
+    "unit": "decimal_places",
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": false,
+    "evidence_required": "Label image showing Unit Sale Price next to or below the MRP",
+    "source_rule": "Rule 6(11)",
+    "source_page": "2-3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_PDP_FONT_HEIGHT",
+    "legal_rule_id": "INT_PCR_PDP_FONT_HEIGHT_CURRENT",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION",
+      "APP_RULE_MEDICAL_DEVICES_STANDARDS_ALIGNMENT"
+    ],
+    "input_fields": [
+      "font_measurement",
+      "PDP_information",
+      "retail_or_institutional",
+      "is_medical_device"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and is_medical_device == False",
+    "validation_logic": "if not PDP_information or not font_measurement:\n    return 'NEEDS_HUMAN_VERIFICATION', 'PDP or font size details cannot be calculated from image alone'\npdp_area = PDP_information.get('area_sq_cm', 0)\nchar_height_mm = font_measurement.get('min_char_height_mm', 0)\nis_molded = PDP_information.get('is_blown_or_molded_surface', False)\n\nif pdp_area < 50:\n    req_height = 2.0 if is_molded else 1.0\nelif pdp_area >= 50 and pdp_area < 100:\n    req_height = 3.0 if is_molded else 1.5\nelif pdp_area >= 100 and pdp_area < 500:\n    req_height = 4.0 if is_molded else 2.5\nelif pdp_area >= 500 and pdp_area < 2500:\n    req_height = 6.0 if is_molded else 4.0\nelse:\n    req_height = 6.0\n\nif char_height_mm < req_height:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Numeral and letter heights are below Table-I limits. Found {char_height_mm}mm, required {req_height}mm'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Conclusive millimeter verification requires physical caliper calibration and measurement'",
+    "threshold": null,
+    "unit": "millimeter",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "PARTIALLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Frontal high-resolution photo of Principal Display Panel with scale benchmark reference",
+    "source_rule": "Rule 7(2,3) & Table-I",
+    "source_page": "11-12",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_VEG_NONVEG_LOGO",
+    "legal_rule_id": "INT_PCR_VEG_NONVEG_LOGO",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "special_logos",
+      "retail_or_institutional",
+      "commodity_category",
+      "PDP_information",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml']) and commodity_category in ['soap', 'shampoo', 'toothpaste', 'cosmetics', 'toiletries']",
+    "validation_logic": "detected_logos = special_logos.get('logos_list', [])\nif 'veg_green_dot' not in detected_logos and 'non_veg_brown_dot' not in detected_logos:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Mandatory vegetarian green dot or non-vegetarian brown dot logo is missing on cosmetics/soaps'\nlogo_location = special_logos.get('veg_non_veg_logo_location', 'unknown')\nif logo_location != 'top_of_PDP':\n    return 'POTENTIAL_NON_COMPLIANCE', 'Vegetarian or non-vegetarian logo must be printed strictly at the top of the PDP'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify if origin of ingredients physically matches the declared vegetarian or non-vegetarian status'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "PARTIALLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Image of upper section of Principal Display Panel showing the circular dot in outline square logo",
+    "source_rule": "Rule 6(8)",
+    "source_page": "21-22",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_GM_FOOD_LOGO",
+    "legal_rule_id": "INT_PCR_GM_FOOD_LOGO",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "special_logos",
+      "retail_or_institutional",
+      "commodity_category",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml']) and commodity_category == 'food' and special_logos.get('is_genetically_modified', False) == True",
+    "validation_logic": "detected_logos = special_logos.get('logos_list', [])\nif 'GM_letters' not in detected_logos:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Genetically modified food must display the bold letters \"GM\" on PDP'\nlogo_location = special_logos.get('gm_logo_location', 'unknown')\nif logo_location != 'top_of_PDP':\n    return 'POTENTIAL_NON_COMPLIANCE', 'GM food bold text must be printed strictly at the top of the PDP'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Requires laboratory verification of food sample composition'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "PDP image showing bold GM lettering printed conspicuously at the top",
+    "source_rule": "Rule 6(7)",
+    "source_page": "21",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_ECOMMERCE_ONLINE_DISCLOSURE",
+    "legal_rule_id": "INT_PCR_ECOMMERCE_ONLINE_DISCLOSURE",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "ecommerce_information"
+    ],
+    "condition": "ecommerce_information.get('is_ecommerce_listing', False) == True",
+    "validation_logic": "missing_declarations = []\nmandatory = ['MRP', 'net_quantity', 'country_of_origin', 'manufacturer_packer_importer_details', 'common_generic_name', 'consumer_care_details']\nfor field in mandatory:\n    if not ecommerce_information.get('declarations_present', {}).get(field, False):\n        missing_declarations.append(field)\nif missing_declarations:\n    return 'POTENTIAL_NON_COMPLIANCE', f'E-commerce digital pre-purchase listing is missing mandatory declarations: {missing_declarations}'\nreturn 'COMPLIANT', 'All mandatory pre-purchase declarations are displayed online'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": false,
+    "evidence_required": "E-commerce listing webpage screenshot and parsed pre-purchase metadata",
+    "source_rule": "Rule 6(10)",
+    "source_page": "10-11",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_DUAL_MRP_PROHIBITION",
+    "legal_rule_id": "INT_PCR_DUAL_MRP_PROHIBITION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "MRP",
+      "ecommerce_information",
+      "retail_or_institutional"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and ecommerce_information.get('is_ecommerce_listing', False) == True",
+    "validation_logic": "online_price = ecommerce_information.get('listed_price', 0.0)\nif online_price > MRP:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Identical product listed online at a price exceeding package MRP. Listed: {online_price}, MRP: {MRP}'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Compare shelf price vs. package MRP at multiple retail physical outlets to rule out dual pricing'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Retail billing invoice matching package label screenshot or website listing pricing metadata",
+    "source_rule": "Rule 18(2A)",
+    "source_page": "12",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_MULTIPACK_QUANTITY_FORMAT",
+    "legal_rule_id": "INT_PCR_MULTIPACK_QUANTITY_FORMAT",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "package_category",
+      "ecommerce_information",
+      "retail_or_institutional"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and package_category == 'multi_piece_package'",
+    "validation_logic": "decl = ecommerce_information.get('supplementary_quantity_declaration_text', '')\nimport re\nif not decl:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Missing supplementary multiplication quantity declaration on multi-piece package'\nif not re.search(r'\\b\\d+\\s*(?:N|number|U|unit|pc|piece|set|pair)\\s*[xX]\\s*\\d+\\s*(?:g|gram|kg|ml|L|m|cm)\\b', decl):\n    return 'POTENTIAL_NON_COMPLIANCE', 'Supplementary quantity declaration format must comply with standard multi-pack multiplication (e.g. 10 N x 10 g)'\nreturn 'COMPLIANT', 'Supplementary multi-pack multiplication format is valid'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": false,
+    "evidence_required": "PDP image showing standard multiplication notation separate from total net weight",
+    "source_rule": "Rule 13(6)",
+    "source_page": "19",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_PAN_MASALA_SMALL_PACK_EXCLUSION",
+    "legal_rule_id": "INT_PCR_PAN_MASALA_SMALL_PACK_EXCLUSION",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "commodity_category",
+      "net_quantity",
+      "unit"
+    ],
+    "condition": "commodity_category == 'pan_masala'",
+    "validation_logic": "return 'NEEDS_HUMAN_VERIFICATION', 'Ensure small pan masala packages <= 10g/ml have all mandatory declarations without applying standard Rule 26(a) exemptions'",
+    "threshold": 10.0,
+    "unit": "g_or_ml",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Retail package layout showing all rule 6 declarations on micro sachet surfaces",
+    "source_rule": "Rule 26(a) second proviso",
+    "source_page": "2",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_RETAILER_WEIGHING_MACHINE",
+    "legal_rule_id": "INT_PCR_RETAILER_WEIGHING_MACHINE",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "retail_or_institutional",
+      "is_gst_registered",
+      "sells_weight_or_volume_packages",
+      "electronic_weighing_machine_class_iii",
+      "smallest_division_value",
+      "printed_receipt_facility"
+    ],
+    "condition": "is_gst_registered == True and sells_weight_or_volume_packages == True",
+    "validation_logic": "if not electronic_weighing_machine_class_iii:\n    return 'POTENTIAL_NON_COMPLIANCE', 'GST registered retailer selling weight/volume packages must maintain Class III weighing machine'\nif smallest_division_value > 1.0:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Smallest division must be at least 1 g'\nif not printed_receipt_facility:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Machine must have facility to issue a printed receipt'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Requires physical on-site audit of the retailer weighing machine'",
+    "threshold": 1.0,
+    "unit": "gram",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "HUMAN_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "Physical inspection photo of the electronic class III weighing scale division plate and receipt facility",
+    "source_rule": "Rule 18(7)",
+    "source_page": "28",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_LPG_CHECK_WEIGHER",
+    "legal_rule_id": "INT_PCR_LPG_CHECK_WEIGHER",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "commodity_category",
+      "is_lpg_distributor",
+      "check_weigher_class_iii",
+      "check_weigher_capacity_gte_50kg",
+      "check_weigher_smallest_division_lte_10g"
+    ],
+    "condition": "commodity_category == 'domestic_lpg' and is_lpg_distributor == True",
+    "validation_logic": "if not check_weigher_class_iii:\n    return 'POTENTIAL_NON_COMPLIANCE', 'LPG distributor must maintain check weigher of accuracy Class III'\nif not check_weigher_capacity_gte_50kg:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Check weigher capacity must be at least 50 kg'\nif not check_weigher_smallest_division_lte_10g:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Check weigher smallest division must be 10 g or less (e=10g)'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify if check weigher is provided physically to the delivery man'",
+    "threshold": 10.0,
+    "unit": "gram",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "HUMAN_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "Stamping certificate of the Class III check weigher scale",
+    "source_rule": "Rule 18(8)",
+    "source_page": "28-29",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_UNIT_NOTATIONS_METRIC",
+    "legal_rule_id": "INT_PCR_UNIT_NOTATIONS_METRIC",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "unit",
+      "retail_or_institutional"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL'",
+    "validation_logic": "if unit in ['dozen', 'score', 'gross', 'great_gross']:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Prohibited non-metric unit notation used: {unit}'\nif unit in ['g', 'kg', 'ml', 'L', 'l', 'm', 'cm', 'N', 'U', 'number', 'unit', 'piece', 'set', 'pair']:\n    return 'COMPLIANT', 'Compliant metric SI unit notation used'\nreturn 'POTENTIAL_NON_COMPLIANCE', f'Non-standard unit notation detected: {unit}'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": false,
+    "evidence_required": "OCR text extraction of unit notation from PDP",
+    "source_rule": "Rule 13",
+    "source_page": "25",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_SEIZURE_EVIDENCE_QUANTITY",
+    "legal_rule_id": "INT_PCR_SEIZURE_EVIDENCE_QUANTITY",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "factory_depot_inspection",
+      "is_non_compliance_detected",
+      "seized_packages_count"
+    ],
+    "condition": "factory_depot_inspection == True and is_non_compliance_detected == True",
+    "validation_logic": "if seized_packages_count != 5:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Statutory seizure requires exactly 5 representative sample packages as court evidence. Found: {seized_packages_count}'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Prosecution seizure process must be verified by a certified Legal Metrology Officer'",
+    "threshold": 5.0,
+    "unit": "package",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "HUMAN_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "Seizure memo (Form Form-A or similar official seizure docket) showing count of packages",
+    "source_rule": "Rule 19(8)",
+    "source_page": "2",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_DECEPTIVE_PACKAGING_PROHIBITION",
+    "legal_rule_id": "INT_PCR_DECEPTIVE_PACKAGING_PROHIBITION",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "PDP_information",
+      "net_quantity",
+      "unit",
+      "retail_or_institutional",
+      "protective_packaging_justified",
+      "machinery_requirements_justified"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and not (net_quantity <= 10.0 and unit in ['g', 'ml'])",
+    "validation_logic": "fill_ratio = PDP_information.get('volume_fill_ratio', 1.0)\nif fill_ratio < 0.70:\n    if protective_packaging_justified or machinery_requirements_justified:\n        return 'NEEDS_HUMAN_VERIFICATION', 'Package has high slack-fill, but manufacturer has submitted protective/machinery justification. Officer review needed.'\n    return 'POTENTIAL_NON_COMPLIANCE', f'Package is potentially deceptive due to excessive slack fill. Volume fill ratio: {fill_ratio}'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Officer inspection required to confirm physical deceptive characteristics'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "VISION_SUPPORTED",
+    "human_verification_required": true,
+    "evidence_required": "3D spatial volume scan of container and empty space comparison photos",
+    "source_rule": "Rule 23",
+    "source_page": "34",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_MPE_LIMITS_LENGTH_AREA_NUMBER",
+    "legal_rule_id": "INT_PCR_MPE_LIMITS_LENGTH_AREA_NUMBER",
+    "applicability_rule_ids": [
+      "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+      "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+      "APP_RULE_BULK_QUANTITY_EXEMPTION"
+    ],
+    "input_fields": [
+      "net_quantity",
+      "unit",
+      "declared_uom_type",
+      "physical_deficiency_percentage",
+      "retail_or_institutional"
+    ],
+    "condition": "retail_or_institutional == 'RETAIL' and declared_uom_type in ['length', 'area', 'number']",
+    "validation_logic": "if declared_uom_type == 'length':\n    mpe = 2.0 if net_quantity <= 10.0 else 1.0\nelif declared_uom_type == 'area':\n    mpe = 4.0 if net_quantity <= 10.0 else 1.0\nelse:\n    mpe = 2.0\n\nif physical_deficiency_percentage > mpe:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Individual deficiency exceeds Table-II MPE limits. Deficiency: {physical_deficiency_percentage}%, Limit: {mpe}%'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Confirm physical quantity error with calibrated steel tape or actual counting'",
+    "threshold": null,
+    "unit": "percentage",
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "PHYSICAL_MEASUREMENT_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "Steel tape calibration certificate and verified measurement sheet",
+    "source_rule": "Rule 22 & First Schedule Table-II",
+    "source_page": "34, 41",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_ADVERTISEMENT_DECLARATIONS",
+    "legal_rule_id": "INT_PCR_ADVERTISEMENT_DECLARATIONS",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "is_advertisement",
+      "mentions_mrp",
+      "advertisement_declares_net_quantity",
+      "font_size_mrp_pixels",
+      "font_size_net_quantity_pixels"
+    ],
+    "condition": "is_advertisement == True and mentions_mrp == True",
+    "validation_logic": "if not advertisement_declares_net_quantity:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Ad mentioning MRP must contain net quantity or count declaration'\nif font_size_net_quantity_pixels < font_size_mrp_pixels:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Font size of net quantity in advertisement must be equal to or larger than MRP font size'\nreturn 'COMPLIANT', 'Advertisement declarations comply with Rule 31'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Screenshot or image of printed/digital advertisement layout",
+    "source_rule": "Rule 31",
+    "source_page": "37-38",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_DIRECTOR_LIABILITY_REGISTRATION",
+    "legal_rule_id": "INT_PCR_DIRECTOR_LIABILITY_REGISTRATION",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "is_company_or_corporation",
+      "registration_contains_responsible_director_name"
+    ],
+    "condition": "is_company_or_corporation == True",
+    "validation_logic": "if not registration_contains_responsible_director_name:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Corporate registration application must explicitly nominate the Director responsible for violations under the Act'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify registered director credentials against MCA database'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "DATABASE_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "LMPC online application form and registered company profile registry",
+    "source_rule": "Rule 27(2)(d)",
+    "source_page": "3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_ANNUAL_PROFILE_PORTAL_UPDATES",
+    "legal_rule_id": "INT_PCR_ANNUAL_PROFILE_PORTAL_UPDATES",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "is_registered",
+      "portal_profile_updated_annually"
+    ],
+    "condition": "is_registered == True",
+    "validation_logic": "if not portal_profile_updated_annually:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Registered company or firm must update its details annually on the online portal'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify update timestamp in online registry portal'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "DATABASE_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "Online portal profile update logs and previous year production statistics",
+    "source_rule": "Rule 27(3) Proviso",
+    "source_page": "3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_BONDED_WAREHOUSE_DECLARATIONS",
+    "legal_rule_id": "INT_PCR_BONDED_WAREHOUSE_DECLARATIONS",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "imported",
+      "importer_status",
+      "declarations_complete_prior_to_leaving_bonded_warehouse"
+    ],
+    "condition": "imported == True and importer_status in ['AEO_Tier_2', 'AEO_Tier_3']",
+    "validation_logic": "if not declarations_complete_prior_to_leaving_bonded_warehouse:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Retail packages must carry all mandatory declarations before leaving the certified AEO bonded warehouse'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Verify certified AEO status and customs warehouse dockets'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "DATABASE_REQUIRED",
+    "human_verification_required": true,
+    "evidence_required": "CBIC AEO certification registry logs and bonded warehouse clearance slips",
+    "source_rule": "Rule 4 Explanation-2",
+    "source_page": "2",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_LOOSE_GARMENT_TAGS",
+    "legal_rule_id": "INT_PCR_LOOSE_GARMENT_TAGS",
+    "applicability_rule_ids": [
+      "APP_RULE_LOOSE_GARMENT_HOSIERY_RELAXATION"
+    ],
+    "input_fields": [
+      "commodity_category",
+      "sold_loose",
+      "product_stage",
+      "tags_declared"
+    ],
+    "condition": "commodity_category in ['garment', 'hosiery'] and sold_loose == True and product_stage == 'finished'",
+    "validation_logic": "missing = []\nmandatory = ['name_address_origin', 'consumer_care', 'sizes_metric', 'MRP']\nfor tag in mandatory:\n    if tag not in tags_declared:\n        missing.append(tag)\nif missing:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Loose garment or hosiery tags are missing mandatory details: {missing}'\nreturn 'COMPLIANT', 'Loose garment tags are compliant'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Image of loose garment tags (MRP, size, consumer care and country of origin cards)",
+    "source_rule": "Rule 26(f)",
+    "source_page": "2-3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_LOOSE_ONLINE_ORDER_TAGS",
+    "legal_rule_id": "INT_PCR_LOOSE_ONLINE_ORDER_TAGS",
+    "applicability_rule_ids": [
+      "APP_RULE_LOOSE_ECOMMERCE_ORDER_RELAXATION"
+    ],
+    "input_fields": [
+      "is_ecommerce",
+      "ordered_loose",
+      "declarations_exist"
+    ],
+    "condition": "is_ecommerce == True and ordered_loose == True",
+    "validation_logic": "missing = []\nmandatory = ['name_address_origin_seller', 'consumer_care', 'MRP', 'net_quantity']\nfor field in mandatory:\n    if field not in declarations_exist:\n        missing.append(field)\nif missing:\n    return 'POTENTIAL_NON_COMPLIANCE', f'Loose online order package or page is missing declarations: {missing}'\nreturn 'COMPLIANT', 'Loose online order declarations are compliant'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": false,
+    "evidence_required": "Screenshot of digital order invoice and image of delivered open packet labels",
+    "source_rule": "Rule 26(g)",
+    "source_page": "4-5",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_ABOLITION_STANDARD_PACK_SIZES",
+    "legal_rule_id": "INT_PCR_ABOLITION_STANDARD_PACK_SIZES",
+    "applicability_rule_ids": [],
+    "input_fields": [
+      "net_quantity",
+      "unit",
+      "commodity_category"
+    ],
+    "condition": "commodity_category != 'edible_oil'",
+    "validation_logic": "return 'COMPLIANT', 'Standard pack sizes are abolished for all general retail packages. Complete fractional sizing freedom is allowed.'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "COMPLIANT",
+    "automation_level": "FULLY_AUTOMATABLE",
+    "human_verification_required": false,
+    "evidence_required": "PDP net quantity text declaration showing any fractional weight/volume",
+    "source_rule": "Rule 5 & Second Schedule",
+    "source_page": "3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "validation_id": "VAL_MEDICAL_DEVICES_ALIGNMENT",
+    "legal_rule_id": "INT_PCR_MEDICAL_DEVICES_ALIGNMENT",
+    "applicability_rule_ids": [
+      "APP_RULE_MEDICAL_DEVICES_STANDARDS_ALIGNMENT"
+    ],
+    "input_fields": [
+      "is_medical_device",
+      "declarations_comply_with_mdr_2017"
+    ],
+    "condition": "is_medical_device == True",
+    "validation_logic": "if not declarations_comply_with_mdr_2017:\n    return 'POTENTIAL_NON_COMPLIANCE', 'Medical devices packages must comply strictly with the declarations and character specifications of the Medical Devices Rules, 2017'\nreturn 'NEEDS_HUMAN_VERIFICATION', 'Requires specialized medical device labeling registration review'",
+    "threshold": null,
+    "unit": null,
+    "output_type": "NEEDS_HUMAN_VERIFICATION",
+    "automation_level": "PARTIALLY_AUTOMATABLE",
+    "human_verification_required": true,
+    "evidence_required": "Medical devices MDR 2017 license number and package layout",
+    "source_rule": "Rule 2(h), Rule 7(2,3), Rule 33(2) provisos",
+    "source_page": "2-3",
+    "status": "VERIFIED_CURRENT"
+  }
+]

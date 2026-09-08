@@ -1,0 +1,373 @@
+[
+  {
+    "governance_rule_id": "GOV_MFR_DECLARATION_V1",
+    "legal_rule_id": "INT_PCR_MFR_DECLARATION",
+    "source_document": "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf",
+    "Gazette number": "G.S.R. 202(E)",
+    "amendment_date": "2011-03-07",
+    "effective_from": "2011-04-01",
+    "effective_until": "2017-12-31",
+    "supersedes": null,
+    "replaces": [],
+    "amended_by": [
+      "D11_GSR385E",
+      "D13_GSR629E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "11, 22-23",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_MFR_DECLARATION_V2",
+    "legal_rule_id": "INT_PCR_MFR_DECLARATION",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(xii)_0_1732871346.pdf",
+    "Gazette number": "G.S.R. 629(E)",
+    "amendment_date": "2017-06-23",
+    "effective_from": "2018-01-01",
+    "effective_until": null,
+    "supersedes": [
+      "GOV_MFR_DECLARATION_V1"
+    ],
+    "replaces": [
+      "GOV_MFR_DECLARATION_V1"
+    ],
+    "amended_by": [],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_CURRENT",
+    "source_page": "12",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_MFG_DATE_DECLARATION_V1",
+    "legal_rule_id": "INT_PCR_MFG_DATE_DECLARATION_HISTORICAL",
+    "source_document": "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf",
+    "Gazette number": "G.S.R. 202(E)",
+    "amendment_date": "2011-03-07",
+    "effective_from": "2011-04-01",
+    "effective_until": "2012-10-31",
+    "supersedes": null,
+    "replaces": [],
+    "amended_by": [
+      "D04_GSR784E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "11, 17",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_MFG_DATE_DECLARATION_V2",
+    "legal_rule_id": "INT_PCR_MFG_DATE_DECLARATION_HISTORICAL_2012",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(iii)_0_1732861046.pdf",
+    "Gazette number": "G.S.R. 784(E)",
+    "amendment_date": "2011-10-24",
+    "effective_from": "2012-11-01",
+    "effective_until": "2023-12-31",
+    "supersedes": [
+      "GOV_MFG_DATE_DECLARATION_V1"
+    ],
+    "replaces": [
+      "GOV_MFG_DATE_DECLARATION_V1"
+    ],
+    "amended_by": [
+      "D15_GSR779E",
+      "D27_GSR714E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "2",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_MFG_DATE_DECLARATION_V3",
+    "legal_rule_id": "INT_PCR_MFG_DATE_DECLARATION",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/230946_1732871433.pdf",
+    "Gazette number": "G.S.R. 779(E)",
+    "amendment_date": "2021-11-02",
+    "effective_from": "2024-01-01",
+    "effective_until": "2024-03-31",
+    "supersedes": [
+      "GOV_MFG_DATE_DECLARATION_V2"
+    ],
+    "replaces": [
+      "GOV_MFG_DATE_DECLARATION_V2"
+    ],
+    "amended_by": [
+      "D28_GSR722E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "3",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_MFG_DATE_DECLARATION_V4",
+    "legal_rule_id": "INT_PCR_MFG_DATE_DECLARATION",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2023.10.6%20amendment%20in%20PCR_1732871982.pdf",
+    "Gazette number": "G.S.R. 722(E)",
+    "amendment_date": "2023-10-06",
+    "effective_from": "2024-04-01",
+    "effective_until": null,
+    "supersedes": [
+      "GOV_MFG_DATE_DECLARATION_V3"
+    ],
+    "replaces": [
+      "GOV_MFG_DATE_DECLARATION_V3"
+    ],
+    "amended_by": [],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_CURRENT",
+    "source_page": "4",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_UNIT_SALE_PRICE_V1",
+    "legal_rule_id": "INT_PCR_UNIT_SALE_PRICE",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/230946_1732871433.pdf",
+    "Gazette number": "G.S.R. 779(E)",
+    "amendment_date": "2021-11-02",
+    "effective_from": "2022-04-01",
+    "effective_until": "2023-12-31",
+    "supersedes": null,
+    "replaces": [],
+    "amended_by": [
+      "D16_GSR226E",
+      "D19_GSR747E",
+      "D20_GSR859E",
+      "D21_GSR60E",
+      "D22_GSR214E",
+      "D23_GSR412E",
+      "D25_GSR463E",
+      "D26_GSR640E",
+      "D27_GSR714E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "3",
+    "conflict_reference": "UNC_02_USP_COMMENCEMENT_POSTPONEMENT"
+  },
+  {
+    "governance_rule_id": "GOV_UNIT_SALE_PRICE_V2",
+    "legal_rule_id": "INT_PCR_UNIT_SALE_PRICE",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/GSR226_1732871458.pdf",
+    "Gazette number": "G.S.R. 226(E)",
+    "amendment_date": "2022-03-28",
+    "effective_from": "2024-01-01",
+    "effective_until": "2023-12-31",
+    "supersedes": [
+      "GOV_UNIT_SALE_PRICE_V1"
+    ],
+    "replaces": [
+      "GOV_UNIT_SALE_PRICE_V1"
+    ],
+    "amended_by": [
+      "D28_GSR722E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "2-3",
+    "conflict_reference": "UNC_02_USP_COMMENCEMENT_POSTPONEMENT"
+  },
+  {
+    "governance_rule_id": "GOV_UNIT_SALE_PRICE_V3",
+    "legal_rule_id": "INT_PCR_UNIT_SALE_PRICE",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2023.10.6%20amendment%20in%20PCR_1732871982.pdf",
+    "Gazette number": "G.S.R. 722(E)",
+    "amendment_date": "2023-10-06",
+    "effective_from": "2024-01-01",
+    "effective_until": null,
+    "supersedes": [
+      "GOV_UNIT_SALE_PRICE_V2"
+    ],
+    "replaces": [
+      "GOV_UNIT_SALE_PRICE_V2"
+    ],
+    "amended_by": [],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_CURRENT",
+    "source_page": "4",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_PDP_FONT_HEIGHT_V1",
+    "legal_rule_id": "INT_PCR_PDP_FONT_HEIGHT_HISTORICAL_TABLE_I",
+    "source_document": "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf",
+    "Gazette number": "G.S.R. 202(E)",
+    "amendment_date": "2011-03-07",
+    "effective_from": "2011-04-01",
+    "effective_until": "2017-12-31",
+    "supersedes": null,
+    "replaces": [],
+    "amended_by": [
+      "D13_GSR629E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "18, 47-48",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_PDP_FONT_HEIGHT_V2",
+    "legal_rule_id": "INT_PCR_PDP_FONT_HEIGHT_CURRENT",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(xii)_0_1732871346.pdf",
+    "Gazette number": "G.S.R. 629(E)",
+    "amendment_date": "2017-06-23",
+    "effective_from": "2018-01-01",
+    "effective_until": "2017-12-31",
+    "supersedes": [
+      "GOV_PDP_FONT_HEIGHT_V1"
+    ],
+    "replaces": [
+      "GOV_PDP_FONT_HEIGHT_V1"
+    ],
+    "amended_by": [
+      "D14_GSR1373E",
+      "D29_GSR778E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "11-12",
+    "conflict_reference": "UNC_03_PDP_HEIGHT_CORRIGENDUM"
+  },
+  {
+    "governance_rule_id": "GOV_PDP_FONT_HEIGHT_V3",
+    "legal_rule_id": "INT_PCR_PDP_FONT_HEIGHT_CURRENT",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(xiii)_0_1732871373.pdf",
+    "Gazette number": "G.S.R. 1373(E)",
+    "amendment_date": "2017-11-07",
+    "effective_from": "2018-01-01",
+    "effective_until": "2025-10-22",
+    "supersedes": [
+      "GOV_PDP_FONT_HEIGHT_V2"
+    ],
+    "replaces": [
+      "GOV_PDP_FONT_HEIGHT_V2"
+    ],
+    "amended_by": [
+      "D29_GSR778E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "2",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_PDP_FONT_HEIGHT_V4",
+    "legal_rule_id": "INT_PCR_PDP_FONT_HEIGHT_CURRENT",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/267107_1761404707.pdf",
+    "Gazette number": "G.S.R. 778(E)",
+    "amendment_date": "2025-10-23",
+    "effective_from": "2025-10-23",
+    "effective_until": null,
+    "supersedes": [
+      "GOV_PDP_FONT_HEIGHT_V3"
+    ],
+    "replaces": [
+      "GOV_PDP_FONT_HEIGHT_V3"
+    ],
+    "amended_by": [],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_CURRENT",
+    "source_page": "2-3",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_STANDARD_PACK_SIZES_V1",
+    "legal_rule_id": "INT_PCR_STANDARD_PACK_SIZES_HISTORICAL",
+    "source_document": "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf",
+    "Gazette number": "G.S.R. 202(E)",
+    "amendment_date": "2011-03-07",
+    "effective_from": "2011-04-01",
+    "effective_until": "2012-10-31",
+    "supersedes": null,
+    "replaces": [],
+    "amended_by": [
+      "D04_GSR784E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "10, 41-43",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_STANDARD_PACK_SIZES_V2",
+    "legal_rule_id": "INT_PCR_STANDARD_PACK_SIZES_HISTORICAL",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(iii)_0_1732861046.pdf",
+    "Gazette number": "G.S.R. 784(E)",
+    "amendment_date": "2011-10-24",
+    "effective_from": "2012-11-01",
+    "effective_until": "2023-12-31",
+    "supersedes": [
+      "GOV_STANDARD_PACK_SIZES_V1"
+    ],
+    "replaces": [
+      "GOV_STANDARD_PACK_SIZES_V1"
+    ],
+    "amended_by": [
+      "D15_GSR779E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "2",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_STANDARD_PACK_SIZES_V3",
+    "legal_rule_id": "INT_PCR_ABOLITION_STANDARD_PACK_SIZES",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/230946_1732871433.pdf",
+    "Gazette number": "G.S.R. 779(E)",
+    "amendment_date": "2021-11-02",
+    "effective_from": "2024-01-01",
+    "effective_until": null,
+    "supersedes": [
+      "GOV_STANDARD_PACK_SIZES_V2"
+    ],
+    "replaces": [
+      "GOV_STANDARD_PACK_SIZES_V2"
+    ],
+    "amended_by": [],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_CURRENT",
+    "source_page": "3",
+    "conflict_reference": null
+  },
+  {
+    "governance_rule_id": "GOV_ECOMMERCE_COO_SORTABLE_FILTER_V1",
+    "legal_rule_id": "INT_PCR_ECOMMERCE_COO_SORTABLE_FILTER",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2026.02.13%20PCR%201st%20COO%20Filter%20on%20e-commerce%20websites_1771231030.pdf",
+    "Gazette number": "G.S.R. 128(E)",
+    "amendment_date": "2026-02-13",
+    "effective_from": "2026-07-01",
+    "effective_until": "2026-04-26",
+    "supersedes": null,
+    "replaces": [],
+    "amended_by": [
+      "D32_GSR312E"
+    ],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_HISTORICAL",
+    "source_page": "2",
+    "conflict_reference": "UNC_01_E_COMM_COO_FILTER"
+  },
+  {
+    "governance_rule_id": "GOV_ECOMMERCE_COO_SORTABLE_FILTER_V2",
+    "legal_rule_id": "INT_PCR_ECOMMERCE_COO_SORTABLE_FILTER",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2026.4.27%20PCR%202nd%20COO%20from%201.7.2027_1777348487.pdf",
+    "Gazette number": "G.S.R. 312(E)",
+    "amendment_date": "2026-04-27",
+    "effective_from": "2027-07-01",
+    "effective_until": null,
+    "supersedes": [
+      "GOV_ECOMMERCE_COO_SORTABLE_FILTER_V1"
+    ],
+    "replaces": [
+      "GOV_ECOMMERCE_COO_SORTABLE_FILTER_V1"
+    ],
+    "amended_by": [],
+    "jurisdiction": "India",
+    "approval/status": "VERIFIED_FUTURE",
+    "source_page": "2",
+    "conflict_reference": null
+  }
+]

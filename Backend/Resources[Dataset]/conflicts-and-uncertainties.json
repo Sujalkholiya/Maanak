@@ -1,0 +1,118 @@
+[
+  {
+    "conflict_id": "UNC_01_E_COMM_COO_FILTER",
+    "subject": "Postponement of E-Commerce Country of Origin Search Filter",
+    "affected_rule_ids": [
+      "INT_PCR_ECOMMERCE_COO_SORTABLE_FILTER"
+    ],
+    "source_a": "G.S.R. 128(E) dated 13-02-2026",
+    "source_b": "G.S.R. 312(E) dated 27-04-2026",
+    "nature_of_conflict": "G.S.R. 128(E) inserted Rule 6(10A) to mandate searchable/sortable Country of Origin filters for imported products w.e.f. 1st July 2026. However, G.S.R. 312(E) substituted Rule 6(10A) to postpone the effective date to 1st July 2027.",
+    "resolution_if_supported": "Postponement is legally authoritative. The filter is not legally required to be active on e-commerce platforms in 2026.",
+    "unresolved_question": "Whether any transitional voluntary compliance guidelines are enforced for e-commerce operators prior to 1st July 2027.",
+    "recommended_system_behavior": "SUSPEND active compliance alarms or prosecution alerts for missing e-commerce sortable Country of Origin filters on digital platforms during the 2026 audit window.",
+    "status": "VERIFIED_FUTURE_LAW",
+    "source_pages": [
+      "G.S.R. 128(E) Page 2",
+      "G.S.R. 312(E) Page 2"
+    ]
+  },
+  {
+    "conflict_id": "UNC_02_EDIBLE_OILS_STANDARDISED_SIZES",
+    "subject": "Restoration of Standard Pack Sizes for Edible Oils post-September 2026",
+    "affected_rule_ids": [
+      "INT_PCR_ABOLITION_STANDARD_PACK_SIZES"
+    ],
+    "source_a": "G.S.R. 779(E) / G.S.R. 226(E) (Abolished Standard Sizes w.e.f. 01-01-2024)",
+    "source_b": "Secondary references / FAQ Question 39",
+    "nature_of_conflict": "Standard pack sizes were completely abolished under G.S.R. 779(E). However, FAQ Question 39 references a new directive stating that edible oil stock of non-prescribed sizes manufactured/packed before 04-09-2026 may be sold, but newly packed edible oils from 05-09-2026 onwards must conform to standard sizes.",
+    "resolution_if_supported": "Unresolved in primary accessible texts. The official Gazette or G.S.R. restoring standard sizes for edible oils is not available in the notebook's accessible texts.",
+    "unresolved_question": "What is the exact G.S.R. number, publication date, and complete list of mandatory standard pack sizes for edible oils enforced after 05-09-2026?",
+    "recommended_system_behavior": "Bypass size-checking alarms for major edible oils and treat all fractional sizes as valid, while flagging a high-priority system verification ticket for human legal review.",
+    "status": "NEEDS_VERIFICATION",
+    "source_pages": [
+      "FAQ Page 10"
+    ]
+  },
+  {
+    "conflict_id": "UNC_03_PAN_MASALA_PACKAGING_STANDARDS",
+    "subject": "Pan Masala Small Pack Exclusion and Warning Graphics",
+    "affected_rule_ids": [
+      "INT_PCR_PAN_MASALA_SMALL_PACK_EXCLUSION"
+    ],
+    "source_a": "G.S.R. 881(E) (Disables small pack exemption w.e.f. 01-02-2026)",
+    "source_b": "Inaccessible standalone G.S.R. 881(E) PDF",
+    "nature_of_conflict": "G.S.R. 881(E) makes all retail declarations mandatory for pan masala regardless of how small the pack is, but the standalone file is blank in this environment.",
+    "resolution_if_supported": "Verified via the consolidated D34 compilation footnoted text, but specific warnings or alternative font rules are missing.",
+    "unresolved_question": "Are there special warning labels, graphic ratios, or localized minimum letter heights specified for micro pan masala sachets?",
+    "recommended_system_behavior": "Enforce all standard Rule 6 declarations on pan masala packages regardless of weight, but suppress specialized warning layout checks until G.S.R. 881(E) or related health mandates are verified.",
+    "status": "NEEDS_VERIFICATION",
+    "source_pages": [
+      "D34 Footnotes / Page 35"
+    ]
+  },
+  {
+    "conflict_id": "UNC_04_LOOSE_GARMENT_DEFINITION",
+    "subject": "Ambiguous Definition of Loose or Open Garments for Digital Feeds",
+    "affected_rule_ids": [
+      "INT_PCR_LOOSE_GARMENT_TAGS"
+    ],
+    "source_a": "G.S.R. 648(E) Rule 26(f)",
+    "source_b": "Computer Vision e-commerce product image feeds",
+    "nature_of_conflict": "The law exempts garments sold 'loose or open at the point of sale' so consumers can inspect them, but a visual scanning system cannot verify whether an item delivered in a box was sold loose or open.",
+    "resolution_if_supported": "No primary source defines digital e-commerce loose-item state boundaries.",
+    "unresolved_question": "How can an automated system reliably distinguish a garment sold sealed from one sold open via arbitrary product image listings?",
+    "recommended_system_behavior": "Rely on e-commerce catalog metadata. If the product category is 'Clothing' and state is classified as 'Loose', apply the 5-tag relaxation of Rule 26(f). Otherwise, prompt a human-in-the-loop task to confirm packaging state.",
+    "status": "INFERENCE",
+    "source_pages": [
+      "G.S.R. 648(E) Page 2"
+    ]
+  },
+  {
+    "conflict_id": "UNC_05_AEO_WAREHOUSE_DIRECTORY",
+    "subject": "Certified Importers AEO Tier-2 and Tier-3 Database Dependency",
+    "affected_rule_ids": [
+      "INT_PCR_BONDED_WAREHOUSE_DECLARATIONS"
+    ],
+    "source_a": "G.S.R. 418(E) Rule 4 Explanation-2",
+    "source_b": "Extracted importer name on packages",
+    "nature_of_conflict": "The rule permits certified AEO Tier-2/3 importers to make declarations at bonded warehouses, but the software cannot determine an importer's certification status from the label image alone.",
+    "resolution_if_supported": "Requires integration with CBIC customs databases.",
+    "unresolved_question": "Which specific active importers hold valid CBIC AEO Tier-2 or Tier-3 certification in the current fiscal year?",
+    "recommended_system_behavior": "Do not automatically flag imported packages at warehouses for missing retail labels; cross-reference the extracted importer name against a registered database or prompt for manual AEO status verification.",
+    "status": "NEEDS_VERIFICATION",
+    "source_pages": [
+      "G.S.R. 418(E) Page 2"
+    ]
+  },
+  {
+    "conflict_id": "UNC_06_SHORTER_ADDRESS_VERIFICATION",
+    "subject": "Verification of Permissible Shorter Corporate Addresses",
+    "affected_rule_ids": [
+      "INT_PCR_MFR_DECLARATION"
+    ],
+    "source_a": "Rule 28 (Shorter address permissible)",
+    "source_b": "Extracted abbreviated address on labels",
+    "nature_of_conflict": "A manufacturer can legally print a shorter address if approved by the Controller under Rule 28, but the system cannot distinguish an approved shorter address from a non-compliant address truncation without a database lookup.",
+    "resolution_if_supported": "Requires access to the State Controller's directory of registered shorter addresses (Rule 29).",
+    "unresolved_question": "What is the complete roster of shorter addresses registered and approved by the Controllers under Rule 28?",
+    "recommended_system_behavior": "Extract the printed shorter address and run a background query against the LMPC registration registry. If missing from the database, flag the address as 'Needs Human Audit' instead of throwing an immediate non-compliance error.",
+    "status": "NEEDS_VERIFICATION",
+    "source_pages": [
+      "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf Page 37"
+    ]
+  },
+  {
+    "conflict_id": "UNC_07_INACCESSIBLE_FAQ_SOURCE",
+    "subject": "Inaccessible Frequently Asked Questions PDF Nudges",
+    "affected_rule_ids": [],
+    "source_a": "Frequently_Asked_Questions_on_Legal_Metrology_whatsnews.pdf (Blank)",
+    "source_b": "Notebook LM Research Bible summary",
+    "nature_of_conflict": "The standalone FAQ document is completely blank in this environment, making it impossible to directly verify standard interpretations (such as toll-free telephone compliance or soap environmental loss weight markers).",
+    "resolution_if_supported": "None. The content must remain classified as inaccessible to prevent unverified model hallucination.",
+    "unresolved_question": "Are the advisory answers in the official FAQ legally binding or merely explanatory guidelines for state officers?",
+    "recommended_system_behavior": "Do not execute automated compliance rules based strictly on FAQ interpretations unless they are supported by accessible primary G.S.R. notifications.",
+    "status": "IN_PROGRESS_INACCESSIBLE_SOURCE",
+    "source_pages": []
+  }
+]
