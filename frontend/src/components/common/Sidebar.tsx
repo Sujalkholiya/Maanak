@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard,
   PlusCircle,
-  ScanLine,
-  Crosshair,
-  FolderOpen,
-  Eye,
-  FileCheck2,
-  Scale,
-  Sparkles,
-  ShoppingBag,
-  FileText,
-  Lock,
+  ShieldAlert,
   Building2,
   MapPin,
   BarChart3,
@@ -21,26 +12,32 @@ import {
   Settings,
   ChevronDown,
   ChevronRight,
-  Sliders,
-  ShieldAlert,
   RefreshCw,
+  Check,
+  LayoutDashboard,
+  FolderOpen,
 } from 'lucide-react';
+import { ROUTES } from '../../app/router/routes';
+import { WORKFLOW_PHASES, getWorkflowIndex } from '../../app/router/workflow';
 
 interface SidebarProps {
-  currentView: string;
-  onNavigate: (view: string) => void;
-  pendingReviewsCount: number;
-  isOfflineMode: boolean;
+  pendingReviewsCount?: number;
+  isOfflineMode?: boolean;
   onTriggerSync?: () => void;
+  onCloseMobileDrawer?: () => void;
+  onNavigate?: (route: string) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  currentView,
-  onNavigate,
-  pendingReviewsCount,
-  isOfflineMode,
+  isOfflineMode = false,
   onTriggerSync,
+  onCloseMobileDrawer,
+  onNavigate,
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPath = location.pathname;
+
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState('just now');
 
@@ -55,58 +52,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
       setLastSynced('just now');
     }, 1200);
   };
-  // Tier 1 — Primary (always visible, front and center)
-  const tier1Actions = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'new-inspection', label: 'New Inspection', icon: PlusCircle, badge: 'Guided', isAction: true },
-    { id: 'scan-package', label: 'Scan Package', icon: ScanLine },
-    { id: 'compliance-xray', label: 'Compliance X-Ray', icon: Crosshair, highlight: true },
-    { id: 'cases', label: 'Case Management', icon: FolderOpen, count: 5 },
+
+  const handleNavigation = (route: string) => {
+    if (onNavigate) {
+      onNavigate(route);
+    } else {
+      navigate(route);
+    }
+    if (onCloseMobileDrawer) {
+      onCloseMobileDrawer();
+    }
+  };
+
+  // Determine current workflow stage index (-1 if outside workflow)
+  const currentWorkflowIndex = getWorkflowIndex(currentPath);
+
+  // Governance & Records (Clickable navigation)
+  const governanceItems = [
+    { id: 'cases', label: 'Case Management', icon: FolderOpen, route: ROUTES.CASES, count: 5 },
+    { id: 'manufacturers', label: 'Manufacturer Intelligence', icon: Building2, route: ROUTES.GOVERNANCE.MANUFACTURERS },
+    { id: 'heatmap', label: 'Geographic Heatmap', icon: MapPin, route: ROUTES.GOVERNANCE.HEATMAP },
+    { id: 'analytics', label: 'Compliance Analytics', icon: BarChart3, route: ROUTES.GOVERNANCE.ANALYTICS },
+    { id: 'audit-trail', label: 'Audit Trail', icon: History, route: ROUTES.GOVERNANCE.AUDIT },
+    { id: 'rule-library', label: 'Rule Library', icon: BookOpenCheck, route: ROUTES.GOVERNANCE.RULE_LIBRARY },
+    { id: 'offline-field', label: 'Offline Field Mode', icon: WifiOff, route: ROUTES.GOVERNANCE.OFFLINE, badge: isOfflineMode ? 'Active' : undefined },
+    { id: 'settings', label: 'Settings', icon: Settings, route: ROUTES.GOVERNANCE.SETTINGS },
   ];
 
-  // Tier 2 — Secondary: Inspection Tools (one click away, collapsible)
-  const tier2Tools = [
-    { id: 'declaration-extraction', label: 'Declaration Workspace', icon: FileCheck2 },
-    { id: 'applicability-engine', label: 'Applicability Engine', icon: Scale },
-    { id: 'font-pdp-analysis', label: 'Font & PDP Analysis', icon: Sparkles },
-    { id: 'product-listings', label: 'E-commerce Comparison', icon: ShoppingBag },
-    {
-      id: 'human-verification',
-      label: 'Officer Review',
-      icon: Eye,
-      badge: `${pendingReviewsCount} Pending`,
-      alert: true,
-    },
-  ];
+  const isGovernanceActive = governanceItems.some((g) => currentPath.startsWith(g.route));
+  const [isGovernanceExpanded, setIsGovernanceExpanded] = useState<boolean>(true);
 
-  // Tier 3 — Governance & Records (collapsible)
-  const tier3Governance = [
-    { id: 'reports', label: 'Inspection Reports', icon: FileText },
-    { id: 'evidence-vault', label: 'Evidence Vault', icon: Lock },
-    { id: 'manufacturers', label: 'Manufacturer Intelligence', icon: Building2 },
-    { id: 'heatmap', label: 'Geographic Heatmap', icon: MapPin },
-    { id: 'analytics', label: 'Compliance Analytics', icon: BarChart3 },
-    { id: 'audit-trail', label: 'Audit Trail', icon: History },
-    { id: 'rule-library', label: 'Rule Library', icon: BookOpenCheck },
-    { id: 'offline-field', label: 'Offline Field Mode', icon: WifiOff, badge: isOfflineMode ? 'Active' : undefined },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
-
-  // Collapsible section states (collapsed by default unless currentView matches)
-  const isTier2Active = tier2Tools.some((t) => t.id === currentView);
-  const isTier3Active = tier3Governance.some((g) => g.id === currentView);
-
-  const [isToolsExpanded, setIsToolsExpanded] = useState<boolean>(isTier2Active);
-  const [isGovernanceExpanded, setIsGovernanceExpanded] = useState<boolean>(isTier3Active);
-
-  // Auto-expand section if user navigates to an item within it
   useEffect(() => {
-    if (isTier2Active) setIsToolsExpanded(true);
-    if (isTier3Active) setIsGovernanceExpanded(true);
-  }, [currentView, isTier2Active, isTier3Active]);
+    if (isGovernanceActive) setIsGovernanceExpanded(true);
+  }, [currentPath, isGovernanceActive]);
+
+  const isDashboardActive = currentPath === ROUTES.HOME || currentPath === ROUTES.DASHBOARD;
 
   return (
-    <aside className="w-64 bg-[#0F1F1E] text-[#C2C9C8] flex flex-col shrink-0 border-r border-[#1E3836] select-none">
+    <aside
+      aria-label="Sidebar Navigation"
+      className="w-64 bg-[#0F1F1E] text-[#C2C9C8] flex flex-col shrink-0 border-r border-[#1E3836] select-none h-full"
+    >
       {/* Brand Header */}
       <div className="p-4 border-b border-[#1A2F2D] flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F1F1E] to-[#1E4D48] flex items-center justify-center p-2 shadow-md shadow-[#0F1F1E]/80 border border-[#22C2C2]/30 shrink-0 overflow-hidden">
@@ -128,131 +114,119 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Navigation List */}
       <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-4 text-xs font-medium">
-        {/* ============================================================ */}
-        {/* TIER 1 — PRIMARY (Always Visible, Front and Center) */}
-        {/* ============================================================ */}
-        <div className="space-y-1">
-          <div className="text-[9px] font-bold text-[#728A87] uppercase tracking-wider px-3 pb-1">
-            Core Workflows
-          </div>
-          {tier1Actions.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentView === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-all text-xs ${
-                  isActive
-                    ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs'
-                    : item.isAction
-                    ? 'text-white bg-[#1A2E2C] hover:bg-[#233D3A] font-semibold'
-                    : 'text-[#C2C9C8] hover:bg-[#1A2E2C] hover:text-white font-medium'
-                }`}
-              >
-                <Icon
-                  className={`w-4 h-4 shrink-0 ${
-                    isActive ? 'text-[#0F1F1E]' : item.highlight ? 'text-[#22C2C2]' : 'text-[#8EA3A0]'
-                  }`}
-                />
-                <span className="truncate">{item.label}</span>
-                {item.badge && (
-                  <span
-                    className={`ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded ${
-                      isActive
-                        ? 'bg-[#18A0A0] text-[#0F1F1E] font-bold'
-                        : 'bg-[#182A29] text-[#22C2C2] border border-[#22C2C2]/30'
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-                {item.count && !item.badge && (
-                  <span
-                    className={`ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                      isActive ? 'bg-[#18A0A0] text-[#0F1F1E]' : 'bg-[#182A29] text-[#8EA3A0]'
-                    }`}
-                  >
-                    {item.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ============================================================ */}
-        {/* TIER 2 — SECONDARY: INSPECTION TOOLS (Collapsible Accordion) */}
-        {/* ============================================================ */}
-        <div className="space-y-1">
-          <button
-            onClick={() => setIsToolsExpanded(!isToolsExpanded)}
-            className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#728A87] hover:text-[#C2C9C8] transition-colors rounded-lg hover:bg-[#1A2E2C]/50 group"
-          >
-            <span className="flex items-center gap-1.5">
-              <Sliders className="w-3 h-3 text-[#728A87] group-hover:text-[#22C2C2]" />
-              <span>Inspection Tools</span>
+        {/* Dashboard Button (Clickable) */}
+        <button
+          onClick={() => handleNavigation(ROUTES.DASHBOARD)}
+          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-xs transition-all cursor-pointer ${
+            isDashboardActive
+              ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs'
+              : 'text-[#C2C9C8] hover:bg-[#1A2E2C] hover:text-white font-medium'
+          }`}
+          aria-current={isDashboardActive ? 'page' : undefined}
+        >
+          <LayoutDashboard
+            className={`w-4 h-4 shrink-0 ${
+              isDashboardActive ? 'text-[#0F1F1E]' : 'text-[#8EA3A0]'
+            }`}
+          />
+          <span className="truncate">Executive Dashboard</span>
+          {isDashboardActive && (
+            <span className="ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#18A0A0] text-[#0F1F1E] font-bold">
+              Active
             </span>
-            <div className="flex items-center gap-1.5">
-              {pendingReviewsCount > 0 && !isToolsExpanded && (
-                <span className="w-2 h-2 rounded-full bg-[#D9A441]"></span>
-              )}
-              {isToolsExpanded ? (
-                <ChevronDown className="w-3.5 h-3.5 text-[#8EA3A0]" />
-              ) : (
-                <ChevronRight className="w-3.5 h-3.5 text-[#728A87]" />
-              )}
-            </div>
-          </button>
+          )}
+        </button>
 
-          {isToolsExpanded && (
-            <div className="space-y-0.5 pl-1 pt-0.5">
-              {tier2Tools.map((item) => {
-                const Icon = item.icon;
-                const isActive = currentView === item.id;
+        {/* ============================================================ */}
+        {/* WORKFLOW PIPELINE (READ-ONLY PROGRESS PANEL) */}
+        {/* ============================================================ */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between px-3 pb-1">
+            <span className="text-[9px] font-bold text-[#728A87] uppercase tracking-wider">
+              Workflow Pipeline
+            </span>
+            <span className="text-[9px] font-mono text-[#0E8A8A] bg-[#122B29] px-1.5 py-0.5 rounded border border-[#1E4D48]">
+              Read-Only
+            </span>
+          </div>
+
+          <div className="relative pl-1">
+            {/* Connecting Vertical Progress Line */}
+            <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-[#1A2F2D] z-0" />
+
+            <div className="space-y-1 relative z-10">
+              {WORKFLOW_PHASES.map((phase, idx) => {
+                const isCurrent = currentWorkflowIndex === idx;
+                const isCompleted = currentWorkflowIndex > idx;
+                const Icon = phase.icon || PlusCircle;
+
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => onNavigate(item.id)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-left transition-all text-xs ${
-                      isActive
-                        ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs'
-                        : 'text-[#C2C9C8] hover:bg-[#1A2E2C] hover:text-white font-medium'
+                  <div
+                    key={phase.id}
+                    aria-current={isCurrent ? 'step' : undefined}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left text-xs transition-all pointer-events-none cursor-default select-none ${
+                      isCurrent
+                        ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs ring-1 ring-[#22C2C2]'
+                        : isCompleted
+                        ? 'text-white bg-[#142624] font-medium'
+                        : 'text-[#8EA3A0] font-normal opacity-85'
                     }`}
                   >
+                    {/* Step Number or Completed Check Indicator */}
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-all ${
+                        isCurrent
+                          ? 'bg-[#0F1F1E] text-[#22C2C2] ring-2 ring-[#0F1F1E]'
+                          : isCompleted
+                          ? 'bg-[#2F7D5F] text-white'
+                          : 'bg-[#182A29] text-[#728A87] border border-[#1E3836]'
+                      }`}
+                    >
+                      {isCompleted ? (
+                        <Check className="w-3 h-3 stroke-[3]" />
+                      ) : (
+                        phase.stepNumber
+                      )}
+                    </div>
+
                     <Icon
                       className={`w-3.5 h-3.5 shrink-0 ${
-                        isActive ? 'text-[#0F1F1E]' : 'text-[#728A87]'
+                        isCurrent
+                          ? 'text-[#0F1F1E]'
+                          : isCompleted
+                          ? 'text-[#2F7D5F]'
+                          : 'text-[#728A87]'
                       }`}
                     />
-                    <span className="truncate">{item.label}</span>
-                    {item.badge && (
-                      <span
-                        className={`ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded ${
-                          isActive
-                            ? 'bg-[#18A0A0] text-[#0F1F1E] font-bold'
-                            : item.alert
-                            ? 'bg-[#2E2413] text-[#D9A441] border border-[#D9A441]/30'
-                            : 'bg-[#182A29] text-[#8EA3A0]'
-                        }`}
-                      >
-                        {item.badge}
+
+                    <span className="truncate">{phase.label}</span>
+
+                    {isCurrent && (
+                      <span className="ml-auto text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#0F1F1E] text-[#22C2C2] font-bold">
+                        Step {phase.stepNumber}
                       </span>
                     )}
-                  </button>
+
+                    {isCompleted && (
+                      <span className="ml-auto text-[9px] font-mono text-[#2F7D5F]">
+                        Done
+                      </span>
+                    )}
+                  </div>
                 );
               })}
             </div>
-          )}
+          </div>
         </div>
 
         {/* ============================================================ */}
-        {/* TIER 3 — GOVERNANCE & RECORDS (Collapsible Accordion) */}
+        {/* GOVERNANCE & RECORDS (Clickable Navigation Accordion) */}
         {/* ============================================================ */}
-        <div className="space-y-1">
+        <div className="space-y-1 pt-1">
           <button
+            type="button"
             onClick={() => setIsGovernanceExpanded(!isGovernanceExpanded)}
-            className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#728A87] hover:text-[#C2C9C8] transition-colors rounded-lg hover:bg-[#1A2E2C]/50 group"
+            className="w-full flex items-center justify-between px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#728A87] hover:text-[#C2C9C8] transition-colors rounded-lg hover:bg-[#1A2E2C]/50 group cursor-pointer"
           >
             <span className="flex items-center gap-1.5">
               <ShieldAlert className="w-3 h-3 text-[#728A87] group-hover:text-[#22C2C2]" />
@@ -261,7 +235,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center gap-1.5">
               {!isGovernanceExpanded && (
                 <span className="text-[9px] font-mono text-[#728A87] bg-[#182A29] px-1 rounded">
-                  {tier3Governance.length}
+                  {governanceItems.length}
                 </span>
               )}
               {isGovernanceExpanded ? (
@@ -274,14 +248,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {isGovernanceExpanded && (
             <div className="space-y-0.5 pl-1 pt-0.5">
-              {tier3Governance.map((item) => {
+              {governanceItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = currentView === item.id;
+                const isActive = currentPath.startsWith(item.route);
                 return (
                   <button
                     key={item.id}
-                    onClick={() => onNavigate(item.id)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-left transition-all text-xs ${
+                    onClick={() => handleNavigation(item.route)}
+                    className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-left text-xs transition-all cursor-pointer ${
                       isActive
                         ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs'
                         : 'text-[#C2C9C8] hover:bg-[#1A2E2C] hover:text-white font-medium'
@@ -302,6 +276,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         }`}
                       >
                         {item.badge}
+                      </span>
+                    )}
+                    {item.count && !item.badge && (
+                      <span
+                        className={`ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                          isActive
+                            ? 'bg-[#18A0A0] text-[#0F1F1E]'
+                            : 'bg-[#182A29] text-[#8EA3A0]'
+                        }`}
+                      >
+                        {item.count}
                       </span>
                     )}
                   </button>
