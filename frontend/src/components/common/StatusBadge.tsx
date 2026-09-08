@@ -17,7 +17,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     return (
       <div className="inline-flex flex-col">
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-md border text-emerald-800 bg-emerald-50 border-emerald-300 ${
+          className={`inline-flex items-center gap-1.5 font-semibold rounded-md border text-[#2F7D5F] bg-[#EDF5F1] border-[#D4E8DF] ${
             size === 'sm'
               ? 'px-2 py-0.5 text-xs'
               : size === 'lg'
@@ -25,11 +25,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
               : 'px-2.5 py-1 text-xs'
           }`}
         >
-          <CheckCircle2 className={size === 'sm' ? 'w-3.5 h-3.5 text-emerald-600' : 'w-4 h-4 text-emerald-600'} />
+          <CheckCircle2 className={size === 'sm' ? 'w-3.5 h-3.5 text-[#2F7D5F]' : 'w-4 h-4 text-[#2F7D5F]'} />
           COMPLIANT
         </span>
         {showSubtext && (
-          <span className="text-[11px] text-emerald-700 mt-0.5 italic">
+          <span className="text-[11px] text-[#2F7D5F] mt-0.5 italic">
             Compliant with checks performed
           </span>
         )}
@@ -41,7 +41,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     return (
       <div className="inline-flex flex-col">
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-md border text-rose-800 bg-rose-50 border-rose-300 ${
+          className={`inline-flex items-center gap-1.5 font-semibold rounded-md border text-[#C1443A] bg-[#FBF0EF] border-[#F4D6D4] ${
             size === 'sm'
               ? 'px-2 py-0.5 text-xs'
               : size === 'lg'
@@ -49,11 +49,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
               : 'px-2.5 py-1 text-xs'
           }`}
         >
-          <AlertOctagon className={size === 'sm' ? 'w-3.5 h-3.5 text-rose-600' : 'w-4 h-4 text-rose-600'} />
+          <AlertOctagon className={size === 'sm' ? 'w-3.5 h-3.5 text-[#C1443A]' : 'w-4 h-4 text-[#C1443A]'} />
           POTENTIAL NON-COMPLIANCE
         </span>
         {showSubtext && (
-          <span className="text-[11px] text-rose-700 mt-0.5 italic">
+          <span className="text-[11px] text-[#C1443A] mt-0.5 italic">
             A rule/evidence mismatch was detected
           </span>
         )}
@@ -65,7 +65,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     return (
       <div className="inline-flex flex-col">
         <span
-          className={`inline-flex items-center gap-1.5 font-semibold rounded-md border text-amber-800 bg-amber-50 border-amber-300 ${
+          className={`inline-flex items-center gap-1.5 font-semibold rounded-md border text-[#C98A2C] bg-[#FDF7ED] border-[#F5E5C9] ${
             size === 'sm'
               ? 'px-2 py-0.5 text-xs'
               : size === 'lg'
@@ -73,11 +73,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
               : 'px-2.5 py-1 text-xs'
           }`}
         >
-          <HelpCircle className={size === 'sm' ? 'w-3.5 h-3.5 text-amber-600' : 'w-4 h-4 text-amber-600'} />
+          <HelpCircle className={size === 'sm' ? 'w-3.5 h-3.5 text-[#C98A2C]' : 'w-4 h-4 text-[#C98A2C]'} />
           NEEDS HUMAN VERIFICATION
         </span>
         {showSubtext && (
-          <span className="text-[11px] text-amber-700 mt-0.5 italic">
+          <span className="text-[11px] text-[#C98A2C] mt-0.5 italic">
             Available digital evidence is insufficient for a definitive determination
           </span>
         )}
@@ -87,8 +87,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   if (status === 'Rejected') {
     return (
-      <span className="inline-flex items-center gap-1.5 font-medium rounded-md px-2 py-1 text-xs bg-slate-100 text-slate-700 border border-slate-300">
-        <XCircle className="w-3.5 h-3.5 text-slate-500" />
+      <span className="inline-flex items-center gap-1.5 font-medium rounded-md px-2 py-1 text-xs bg-[#F4F3EE] text-[#3F4544] border border-[#E6E4DF]">
+        <XCircle className="w-3.5 h-3.5 text-[#727A78]" />
         Finding Rejected
       </span>
     );
@@ -96,16 +96,16 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   if (status === 'Closed') {
     return (
-      <span className="inline-flex items-center gap-1.5 font-medium rounded-md px-2 py-1 text-xs bg-slate-100 text-slate-600 border border-slate-300">
-        <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+      <span className="inline-flex items-center gap-1.5 font-medium rounded-md px-2 py-1 text-xs bg-[#F4F3EE] text-[#3F4544] border border-[#E6E4DF]">
+        <ShieldCheck className="w-3.5 h-3.5 text-[#727A78]" />
         Inspection Closed
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 font-medium rounded-md px-2 py-1 text-xs bg-slate-100 text-slate-700 border border-slate-300">
-      <Clock className="w-3.5 h-3.5 text-slate-500" />
+    <span className="inline-flex items-center gap-1.5 font-medium rounded-md px-2 py-1 text-xs bg-[#F4F3EE] text-[#3F4544] border border-[#E6E4DF]">
+      <Clock className="w-3.5 h-3.5 text-[#727A78]" />
       {status}
     </span>
   );

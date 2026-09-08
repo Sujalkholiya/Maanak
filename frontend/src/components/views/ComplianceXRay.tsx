@@ -40,6 +40,7 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
   const [filterMode, setFilterMode] = useState<'ALL' | 'ISSUES_ONLY' | 'COMPLIANT_ONLY'>('ALL');
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [showRuler, setShowRuler] = useState<boolean>(true);
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState<boolean>(false);
 
   const selectedBox = currentCase.boundingBoxes.find((b) => b.id === selectedBoxId);
 
@@ -55,24 +56,24 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-              <Crosshair className="w-6 h-6 text-blue-700" />
+            <h1 className="text-2xl font-black text-[#111413] tracking-tight flex items-center gap-2">
+              <Crosshair className="w-6 h-6 text-[#0E8A8A]" />
               Compliance X-Ray Visual Workspace
             </h1>
             <DemoBadge />
           </div>
-          <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
+          <p className="text-xs sm:text-sm text-[#727A78] mt-0.5">
             Interactive package canvas: Click any highlighted declaration to inspect evidentiary justification, statutory limits, and required officer action.
           </p>
         </div>
 
         {/* Commodity Case Switcher */}
         <div className="flex items-center gap-2 text-xs shrink-0">
-          <span className="font-semibold text-slate-500">Sample Docket:</span>
+          <span className="font-semibold text-[#727A78]">Sample Docket:</span>
           <select
             value={currentCase.id}
             onChange={(e) => onSelectSampleCase(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-slate-300 bg-white font-bold text-slate-800 text-xs shadow-2xs focus:ring-2 focus:ring-blue-500 outline-none"
+            className="px-3 py-2 rounded-xl border border-[#E6E4DF] bg-white font-bold text-[#111413] text-xs shadow-2xs focus:ring-2 focus:ring-[#22C2C2] outline-none"
           >
             <option value="CASE-2026-0841">Royal Feast Almonds (Dual MRP Discrepancy)</option>
             <option value="CASE-2026-0842">Himalayan Basmati Rice (Compliant Standard)</option>
@@ -87,14 +88,14 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
         {/* Left / Center: Annotated Packaging Canvas (8 cols - Maximum Visual Room) */}
         <div className="lg:col-span-8 space-y-3">
           {/* Restrained Canvas Toolbar */}
-          <div className="flex items-center justify-between bg-slate-900 text-white px-4 py-2 rounded-xl text-xs shadow-xs">
+          <div className="flex items-center justify-between bg-[#0F1F1E] text-white px-4 py-2 rounded-xl text-xs shadow-xs border border-[#1E3836]">
             {/* Layer Filter Pills */}
             <div className="flex items-center gap-1.5">
-              <span className="text-slate-400 font-semibold mr-1 text-[11px]">Layer:</span>
+              <span className="text-[#8EA3A0] font-semibold mr-1 text-[11px]">Layer:</span>
               <button
                 onClick={() => setFilterMode('ALL')}
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
-                  filterMode === 'ALL' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                  filterMode === 'ALL' ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs' : 'text-[#C2C9C8] hover:text-white'
                 }`}
               >
                 All ({currentCase.boundingBoxes.length})
@@ -103,8 +104,8 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
                 onClick={() => setFilterMode('ISSUES_ONLY')}
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
                   filterMode === 'ISSUES_ONLY'
-                    ? 'bg-rose-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-rose-300'
+                    ? 'bg-[#C1443A] text-white shadow-xs font-bold'
+                    : 'text-[#C2C9C8] hover:text-rose-300'
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
@@ -114,8 +115,8 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
                 onClick={() => setFilterMode('COMPLIANT_ONLY')}
                 className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors flex items-center gap-1 ${
                   filterMode === 'COMPLIANT_ONLY'
-                    ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-emerald-300'
+                    ? 'bg-[#2F7D5F] text-white shadow-xs font-bold'
+                    : 'text-[#C2C9C8] hover:text-emerald-300'
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
@@ -124,10 +125,10 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
             </div>
 
             {/* Subtle Zoom Controls */}
-            <div className="flex items-center gap-2 text-slate-300">
+            <div className="flex items-center gap-2 text-[#C2C9C8]">
               <button
                 onClick={() => setZoomLevel((z) => Math.max(0.8, z - 0.2))}
-                className="p-1 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition-colors"
+                className="p-1 hover:bg-[#1A2E2C] rounded text-[#C2C9C8] hover:text-white transition-colors"
                 title="Zoom Out"
               >
                 <ZoomOut className="w-4 h-4" />
@@ -311,71 +312,85 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
                     </p>
                   </div>
                 ) : (
-                  <div className="p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl text-emerald-950">
-                    <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <div className="p-3 bg-[#EDF5F1] border border-[#D4E8DF] rounded-xl text-[#2F7D5F]">
+                    <div className="text-[10px] font-bold text-[#2F7D5F] uppercase tracking-wider flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2F7D5F]" />
                       RULE SATISFIED
                     </div>
-                    <p className="mt-1 leading-relaxed font-medium">
+                    <p className="mt-1 leading-relaxed font-medium text-[#3F4544]">
                       Declaration matches gazetted format, font criteria, and statutory metric specifications.
                     </p>
                   </div>
                 )}
 
                 {/* 2. STATUTORY REQUIREMENT */}
-                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                  <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <div className="p-3 bg-[#F7F6F3] rounded-xl border border-[#E6E4DF]">
+                  <div className="flex items-center justify-between text-[10px] font-bold text-[#727A78] uppercase tracking-wider">
                     <span>APPLICABLE REQUIREMENT</span>
-                    <span className="font-mono text-blue-700">{selectedBox.ruleId}</span>
+                    <span className="font-mono text-[#0E8A8A] font-bold">{selectedBox.ruleId}</span>
                   </div>
-                  <div className="font-bold text-slate-800 mt-1">{selectedBox.ruleName}</div>
+                  <div className="font-bold text-[#111413] mt-1">{selectedBox.ruleName}</div>
                   {selectedBox.legalLimit && (
-                    <div className="text-[11px] text-slate-600 mt-1 font-mono">
+                    <div className="text-[11px] text-[#727A78] mt-1 font-mono">
                       Threshold: {selectedBox.legalLimit}
                     </div>
                   )}
                 </div>
 
-                {/* 3. CONFIDENCE & LIMITATION (Supporting metadata - smaller visual weight) */}
-                <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
-                    <span className="text-slate-500">Confidence:</span>
-                    <div className="font-mono font-bold text-slate-900 text-sm">
-                      {Math.round(selectedBox.confidence * 100)}%
-                    </div>
-                  </div>
-                  <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
-                    <span className="text-slate-500">Coordinates:</span>
-                    <div className="font-mono text-slate-700">
-                      X:{selectedBox.x}% Y:{selectedBox.y}%
-                    </div>
-                  </div>
-                </div>
+                {/* 3. PROGRESSIVE DISCLOSURE: TECHNICAL METADATA (On Demand) */}
+                <div className="pt-1">
+                  <button
+                    onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+                    className="w-full flex items-center justify-between p-2 rounded-lg bg-[#F7F6F3] hover:bg-[#EFECE6] text-[#3F4544] text-[11px] font-semibold border border-[#E6E4DF] transition-colors"
+                  >
+                    <span>{showTechnicalDetails ? 'Hide Technical Metadata' : 'Show Details & Technical Metadata'}</span>
+                    <span className="text-[10px] text-[#727A78]">{showTechnicalDetails ? '▲' : '▼'}</span>
+                  </button>
 
-                {selectedBox.physicalVerificationRequired && (
-                  <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-950 text-[11px] leading-relaxed">
-                    <span className="font-bold text-amber-800">System Limitation: </span>
-                    {selectedBox.physicalVerificationRequired}
-                  </div>
-                )}
+                  {showTechnicalDetails && (
+                    <div className="space-y-2 mt-2">
+                      <div className="grid grid-cols-2 gap-2 text-[11px]">
+                        <div className="p-2.5 bg-[#F7F6F3] rounded-lg border border-[#E6E4DF]">
+                          <span className="text-[#727A78]">Confidence:</span>
+                          <div className="font-mono font-bold text-[#111413] text-sm">
+                            {Math.round(selectedBox.confidence * 100)}%
+                          </div>
+                        </div>
+                        <div className="p-2.5 bg-[#F7F6F3] rounded-lg border border-[#E6E4DF]">
+                          <span className="text-[#727A78]">Coordinates:</span>
+                          <div className="font-mono text-[#3F4544]">
+                            X:{selectedBox.x}% Y:{selectedBox.y}%
+                          </div>
+                        </div>
+                      </div>
+
+                      {selectedBox.physicalVerificationRequired && (
+                        <div className="p-2.5 bg-[#FDF7ED] border border-[#F5E5C9] rounded-lg text-[#C98A2C] text-[11px] leading-relaxed">
+                          <span className="font-bold text-[#C98A2C]">System Limitation: </span>
+                          <span className="text-[#3F4544]">{selectedBox.physicalVerificationRequired}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* 4. RECOMMENDED OFFICER ACTION (Primary CTAs) */}
-              <div className="pt-3 border-t border-slate-100 space-y-2">
-                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              <div className="pt-3 border-t border-[#E6E4DF] space-y-2">
+                <div className="text-[10px] font-bold text-[#727A78] uppercase tracking-wider">
                   RECOMMENDED OFFICER ACTION
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => onProceedToReview && onProceedToReview()}
-                    className="py-2.5 px-3 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors"
+                    className="py-2.5 px-3 bg-[#22C2C2] hover:bg-[#1EB0B0] text-[#0F1F1E] rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors"
                   >
                     <Check className="w-3.5 h-3.5" />
                     Confirm Finding
                   </button>
                   <button
                     onClick={() => alert('Officer Observation: Finding set as dismissed with notes.')}
-                    className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border border-slate-200 transition-colors"
+                    className="py-2.5 px-3 bg-[#F4F3EE] hover:bg-[#E6E4DF] text-[#3F4544] rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border border-[#E6E4DF] transition-colors"
                   >
                     <X className="w-3.5 h-3.5" />
                     Dismiss
@@ -385,14 +400,14 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
                 <div className="pt-1 flex items-center justify-between text-xs">
                   <button
                     onClick={() => alert('Field request: Re-scan with macro illumination requested.')}
-                    className="text-slate-500 hover:text-slate-800 font-medium inline-flex items-center gap-1 text-[11px]"
+                    className="text-[#727A78] hover:text-[#111413] font-medium inline-flex items-center gap-1 text-[11px]"
                   >
                     <RefreshCw className="w-3 h-3" />
                     Request Re-scan
                   </button>
                   <button
                     onClick={() => onProceedToReview && onProceedToReview()}
-                    className="text-blue-700 hover:text-blue-800 font-bold inline-flex items-center gap-1 text-xs"
+                    className="text-[#0E8A8A] hover:text-[#0b6d6d] font-bold inline-flex items-center gap-1 text-xs"
                   >
                     Full Review Console →
                   </button>
@@ -400,7 +415,7 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500 text-xs">
+            <div className="bg-white rounded-xl border border-[#E6E4DF] p-8 text-center text-[#727A78] text-xs">
               Select a bounding box on the package canvas to inspect legal evidence.
             </div>
           )}

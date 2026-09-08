@@ -2,27 +2,29 @@
 
 @layer base {
   * {
-    border-color: #e2e8f0;
+    border-color: #E6E4DF;
   }
   body {
+    background-color: #F7F6F3;
+    color: #3F4544;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* Custom subtle scrollbar */
+/* Custom subtle scrollbar in warm minimal theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F7F6F3;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #D5D2CA;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #B8B4AA;
 }
 
 /* Print styles for Inspection Report */

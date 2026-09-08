@@ -55,31 +55,31 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
   return (
     <div className="space-y-3.5 max-w-6xl mx-auto pb-8">
       {/* 1. CLEAN CASE DOCKET STRIP (White card, unified neutral styling) */}
-      <div className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="bg-white px-4 py-2.5 rounded-xl border border-[#E6E4DF] shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5 min-w-0">
-          <span className="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200 shrink-0">
+          <span className="text-[10px] font-mono font-bold bg-[#22C2C2]/15 text-[#0E8A8A] px-2 py-0.5 rounded border border-[#22C2C2]/30 shrink-0">
             {currentCase.id}
           </span>
-          <span className="font-bold text-slate-900 truncate">
+          <span className="font-bold text-[#111413] truncate">
             {currentCase.productName}
           </span>
-          <span className="text-slate-400 text-[11px] hidden sm:inline">
+          <span className="text-[#727A78] text-[11px] hidden sm:inline">
             · {currentCase.category}
           </span>
         </div>
 
-        <div className="flex items-center gap-3 text-[11px] text-slate-500 shrink-0">
+        <div className="flex items-center gap-3 text-[11px] text-[#727A78] shrink-0">
           <span className="hidden md:inline">
-            Officer: <strong className="text-slate-700 font-medium">{currentCase.officer.split('(')[0]}</strong>
+            Officer: <strong className="text-[#111413] font-medium">{currentCase.officer.split('(')[0]}</strong>
           </span>
-          <span className="text-slate-400">
+          <span className="text-[#727A78]">
             {currentCase.createdDate}
           </span>
         </div>
       </div>
 
       {/* 2. COMPACT STEP TRACKER */}
-      <div className="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-xs">
+      <div className="bg-white px-4 py-2 rounded-xl border border-[#E6E4DF] shadow-xs">
         <div className="flex items-center justify-between gap-1 overflow-x-auto">
           {steps.map((step, idx) => {
             const isCurrent = currentStep === step.num;
@@ -90,18 +90,18 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
                 <button
                   onClick={() => setCurrentStep(step.num)}
                   className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${isCurrent
-                      ? 'bg-blue-700 text-white shadow-xs'
+                      ? 'bg-[#22C2C2] text-[#0F1F1E] font-bold shadow-xs'
                       : isPast
-                        ? 'text-emerald-700 hover:bg-emerald-50'
-                        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                        ? 'text-[#2F7D5F] hover:bg-[#EDF5F1]'
+                        : 'text-[#727A78] hover:bg-[#F4F3EE] hover:text-[#111413]'
                     }`}
                 >
                   <div
                     className={`w-4.5 h-4.5 rounded-full flex items-center justify-center text-[10px] font-bold ${isCurrent
-                        ? 'bg-white text-blue-700'
+                        ? 'bg-[#0F1F1E] text-[#22C2C2]'
                         : isPast
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-slate-200 text-slate-600'
+                          ? 'bg-[#2F7D5F] text-white'
+                          : 'bg-[#E6E4DF] text-[#727A78]'
                       }`}
                   >
                     {isPast ? <Check className="w-3 h-3 stroke-[3]" /> : step.num}
@@ -111,7 +111,7 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
 
                 {idx < steps.length - 1 && (
                   <div
-                    className={`hidden sm:block flex-1 h-0.5 min-w-3 max-w-8 mx-1 transition-colors ${isPast ? 'bg-emerald-400' : 'bg-slate-200'
+                    className={`hidden sm:block flex-1 h-0.5 min-w-3 max-w-8 mx-1 transition-colors ${isPast ? 'bg-[#2F7D5F]' : 'bg-[#E6E4DF]'
                       }`}
                   />
                 )}
@@ -170,11 +170,11 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
 
       {/* 4. STREAMLINED WORKFLOW BOTTOM CONTROLS */}
       {!isProcessing && (
-        <div className="bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between text-xs font-semibold">
+        <div className="bg-white px-4 py-3 rounded-xl border border-[#E6E4DF] shadow-xs flex items-center justify-between text-xs font-semibold">
           <button
             disabled={currentStep === 1}
             onClick={() => setCurrentStep((s) => Math.max(1, s - 1))}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-30 text-slate-700 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-3.5 py-2 bg-[#F4F3EE] hover:bg-[#E6E4DF] disabled:opacity-30 text-[#3F4544] rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             <span>Previous Step</span>
@@ -184,10 +184,10 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
             {/* Demoted to secondary ghost action */}
             <button
               onClick={onOpenXRay}
-              className="px-3 py-2 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-2 text-[#3F4544] hover:text-[#111413] border border-[#E6E4DF] hover:border-[#22C2C2] rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
               title="Open deep inspection overlay"
             >
-              <Crosshair className="w-3.5 h-3.5 text-blue-600" />
+              <Crosshair className="w-3.5 h-3.5 text-[#0E8A8A]" />
               <span className="hidden sm:inline">Inspect in Compliance X-Ray</span>
               <span className="sm:hidden">X-Ray</span>
             </button>
@@ -201,7 +201,7 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
                     setCurrentStep((s) => Math.min(6, s + 1));
                   }
                 }}
-                className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                className="px-4 py-2 bg-[#22C2C2] hover:bg-[#1EB0B0] text-[#0F1F1E] font-bold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               >
                 <span>Advance to Next Step</span>
                 <ChevronRight className="w-3.5 h-3.5" />

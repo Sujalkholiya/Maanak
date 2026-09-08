@@ -50,25 +50,25 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-slate-950/60 backdrop-blur-xs p-4">
-      <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl border border-slate-300 overflow-hidden flex flex-col max-h-[80vh]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-[#0F1F1E]/60 backdrop-blur-xs p-4">
+      <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl border border-[#E6E4DF] overflow-hidden flex flex-col max-h-[80vh]">
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3 border-b border-slate-200 bg-slate-50 gap-3">
-          <Search className="w-5 h-5 text-slate-400 shrink-0" />
+        <div className="flex items-center px-4 py-3 border-b border-[#E6E4DF] bg-[#F7F6F3] gap-3">
+          <Search className="w-5 h-5 text-[#727A78] shrink-0" />
           <input
             type="text"
             placeholder="Search Case ID, Product, Manufacturer, Evidence ID, or Rule ID..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            className="w-full bg-transparent outline-none text-slate-800 placeholder-slate-400 text-base"
+            className="w-full bg-transparent outline-none text-[#111413] placeholder-[#727A78] text-base"
           />
-          <kbd className="hidden sm:inline-block px-2 py-0.5 text-xs text-slate-500 bg-slate-200 rounded border border-slate-300">
+          <kbd className="hidden sm:inline-block px-2 py-0.5 text-xs text-[#727A78] bg-[#E6E4DF]/60 rounded border border-[#E6E4DF]">
             ESC
           </kbd>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-slate-200 rounded-lg text-slate-500 transition-colors"
+            className="p-1 hover:bg-[#E6E4DF] rounded-lg text-[#727A78] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -78,30 +78,30 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         <div className="overflow-y-auto p-4 space-y-5 text-sm">
           {/* Quick preset suggestions if empty */}
           {query === '' && (
-            <div className="text-slate-500 text-xs">
-              <p className="font-semibold text-slate-700 mb-2">QUICK ACCESS PRESETS:</p>
+            <div className="text-[#727A78] text-xs">
+              <p className="font-semibold text-[#111413] mb-2">QUICK ACCESS PRESETS:</p>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setQuery('CASE-2026-0841')}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded border border-slate-300 text-slate-700"
+                  className="px-2.5 py-1 bg-[#F4F3EE] hover:bg-[#EDF5F1] hover:text-[#0E8A8A] rounded border border-[#E6E4DF] text-[#3F4544] transition-colors"
                 >
                   CASE-2026-0841 (Royal Feast Almonds)
                 </button>
                 <button
                   onClick={() => setQuery('ABC Foods')}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded border border-slate-300 text-slate-700"
+                  className="px-2.5 py-1 bg-[#F4F3EE] hover:bg-[#EDF5F1] hover:text-[#0E8A8A] rounded border border-[#E6E4DF] text-[#3F4544] transition-colors"
                 >
                   ABC Foods Pvt Ltd
                 </button>
                 <button
                   onClick={() => setQuery('RULE-6-1-E')}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded border border-slate-300 text-slate-700"
+                  className="px-2.5 py-1 bg-[#F4F3EE] hover:bg-[#EDF5F1] hover:text-[#0E8A8A] rounded border border-[#E6E4DF] text-[#3F4544] transition-colors"
                 >
                   RULE-6-1-E (MRP Regulations)
                 </button>
                 <button
                   onClick={() => setQuery('EVD-2026-0841-A')}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded border border-slate-300 text-slate-700"
+                  className="px-2.5 py-1 bg-[#F4F3EE] hover:bg-[#EDF5F1] hover:text-[#0E8A8A] rounded border border-[#E6E4DF] text-[#3F4544] transition-colors"
                 >
                   EVD-2026-0841-A
                 </button>
@@ -112,8 +112,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {/* Cases */}
           {filteredCases.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                <FolderCheck className="w-3.5 h-3.5 text-blue-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#727A78] uppercase tracking-wider mb-2">
+                <FolderCheck className="w-3.5 h-3.5 text-[#0E8A8A]" />
                 Inspection Cases ({filteredCases.length})
               </div>
               <div className="space-y-1.5">
@@ -121,15 +121,15 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                   <div
                     key={c.id}
                     onClick={() => handleCaseClick(c.id)}
-                    className="flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-2.5 rounded-lg border border-[#E6E4DF] hover:border-[#22C2C2] hover:bg-[#22C2C2]/5 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="font-mono text-xs font-bold text-blue-700 bg-blue-100/60 px-2 py-0.5 rounded">
+                      <span className="font-mono text-xs font-bold text-[#0E8A8A] bg-[#22C2C2]/15 px-2 py-0.5 rounded">
                         {c.id}
                       </span>
                       <div className="truncate">
-                        <div className="font-semibold text-slate-800 truncate">{c.productName}</div>
-                        <div className="text-xs text-slate-500">{c.manufacturer} · {c.location}</div>
+                        <div className="font-semibold text-[#111413] truncate">{c.productName}</div>
+                        <div className="text-xs text-[#727A78]">{c.manufacturer} · {c.location}</div>
                       </div>
                     </div>
                     <StatusBadge status={c.overallStatus} size="sm" />
@@ -142,8 +142,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {/* Manufacturers */}
           {filteredManufacturers.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                <Building2 className="w-3.5 h-3.5 text-indigo-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#727A78] uppercase tracking-wider mb-2">
+                <Building2 className="w-3.5 h-3.5 text-[#0E8A8A]" />
                 Manufacturers ({filteredManufacturers.length})
               </div>
               <div className="space-y-1.5">
@@ -154,13 +154,13 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onNavigateView('manufacturers');
                       onClose();
                     }}
-                    className="flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-2.5 rounded-lg border border-[#E6E4DF] hover:border-[#22C2C2] hover:bg-[#22C2C2]/5 cursor-pointer transition-colors"
                   >
                     <div>
-                      <div className="font-semibold text-slate-800">{m.name}</div>
-                      <div className="text-xs text-slate-500">{m.registrationNo} · {m.address}</div>
+                      <div className="font-semibold text-[#111413]">{m.name}</div>
+                      <div className="text-xs text-[#727A78]">{m.registrationNo} · {m.address}</div>
                     </div>
-                    <span className="text-xs font-semibold px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-300 rounded">
+                    <span className="text-xs font-semibold px-2 py-0.5 bg-[#FDF7ED] text-[#C98A2C] border border-[#F5E5C9] rounded">
                       {m.recurringIssues} Recurring Issues
                     </span>
                   </div>
@@ -172,8 +172,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {/* Rules */}
           {filteredRules.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                <Shield className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#727A78] uppercase tracking-wider mb-2">
+                <Shield className="w-3.5 h-3.5 text-[#2F7D5F]" />
                 Legal Rule Library ({filteredRules.length})
               </div>
               <div className="space-y-1.5">
@@ -184,15 +184,15 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onNavigateView('rule-library');
                       onClose();
                     }}
-                    className="p-2.5 rounded-lg border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 cursor-pointer transition-colors"
+                    className="p-2.5 rounded-lg border border-[#E6E4DF] hover:border-[#22C2C2] hover:bg-[#22C2C2]/5 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">
+                      <span className="font-mono text-xs font-bold text-[#2F7D5F] bg-[#EDF5F1] px-1.5 py-0.5 rounded">
                         {r.id}
                       </span>
-                      <span className="font-semibold text-slate-800">{r.rule}</span>
+                      <span className="font-semibold text-[#111413]">{r.rule}</span>
                     </div>
-                    <p className="text-xs text-slate-600 line-clamp-1 mt-1">{r.summary}</p>
+                    <p className="text-xs text-[#727A78] line-clamp-1 mt-1">{r.summary}</p>
                   </div>
                 ))}
               </div>
@@ -202,8 +202,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {/* Evidence */}
           {filteredEvidence.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                <FileText className="w-3.5 h-3.5 text-slate-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#727A78] uppercase tracking-wider mb-2">
+                <FileText className="w-3.5 h-3.5 text-[#727A78]" />
                 Evidence Vault Records ({filteredEvidence.length})
               </div>
               <div className="space-y-1.5">
@@ -214,15 +214,15 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       onNavigateView('evidence-vault');
                       onClose();
                     }}
-                    className="flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-2.5 rounded-lg border border-[#E6E4DF] hover:border-[#22C2C2] hover:bg-[#22C2C2]/5 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-300">
+                      <span className="font-mono text-xs text-[#3F4544] bg-[#F4F3EE] px-1.5 py-0.5 rounded border border-[#E6E4DF]">
                         {e.id}
                       </span>
                       <div>
-                        <div className="font-medium text-slate-800">{e.productName}</div>
-                        <div className="text-xs text-slate-500">{e.ruleRef}</div>
+                        <div className="font-medium text-[#111413]">{e.productName}</div>
+                        <div className="text-xs text-[#727A78]">{e.ruleRef}</div>
                       </div>
                     </div>
                     <StatusBadge status={e.status} size="sm" />
