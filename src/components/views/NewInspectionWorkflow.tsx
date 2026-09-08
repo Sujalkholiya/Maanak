@@ -9,7 +9,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Crosshair,
-  Sparkles,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react';
 import { InspectionCase } from '../../types';
 import { CaptureScreen } from './CaptureScreen';
@@ -36,12 +37,12 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const steps = [
-    { num: 1, id: 'CAPTURE', label: '01 CAPTURE', icon: Camera },
-    { num: 2, id: 'EXTRACT', label: '02 EXTRACT', icon: FileCheck2 },
-    { num: 3, id: 'APPLICABILITY', label: '03 DETERMINE APPLICABILITY', icon: Scale },
-    { num: 4, id: 'RULES', label: '04 CHECK RULES', icon: ShieldCheck },
-    { num: 5, id: 'REVIEW', label: '05 REVIEW', icon: UserCheck },
-    { num: 6, id: 'REPORT', label: '06 REPORT', icon: FileText },
+    { num: 1, id: 'CAPTURE', label: 'Capture Evidence', short: '01 Capture', icon: Camera },
+    { num: 2, id: 'EXTRACT', label: 'Bilingual OCR', short: '02 Extract', icon: FileCheck2 },
+    { num: 3, id: 'APPLICABILITY', label: 'Applicability Engine', short: '03 Applicability', icon: Scale },
+    { num: 4, id: 'RULES', label: 'Rule Validation', short: '04 Rules', icon: ShieldCheck },
+    { num: 5, id: 'REVIEW', label: 'Officer Verification', short: '05 Review', icon: UserCheck },
+    { num: 6, id: 'REPORT', label: 'Legal Report', short: '06 Report', icon: FileText },
   ];
 
   const handleProceedToAnalysis = () => {
@@ -54,36 +55,51 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Persistent Inspection Metadata Bar */}
-      <div className="bg-[#0F172A] text-white p-4 rounded-xl border border-slate-800 shadow-md flex flex-wrap items-center justify-between gap-4 text-xs">
-        <div className="flex items-center gap-4">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      {/* 1. PERSISTENT CASE STRIP (Clean, Uncluttered, High Contrast) */}
+      <div className="bg-[#0B192C] text-white p-4 rounded-2xl border border-slate-800 shadow-md flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div className="flex items-center gap-4 min-w-0">
           <div>
-            <span className="text-slate-400 text-[10px] uppercase font-bold block">Case Identifier</span>
-            <span className="font-mono font-bold text-cyan-300 text-sm">{currentCase.id}</span>
+            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider block">
+              Active Case Docket
+            </span>
+            <span className="font-mono font-bold text-cyan-300 text-sm">
+              {currentCase.id}
+            </span>
           </div>
-          <div className="border-l border-slate-700 pl-4">
-            <span className="text-slate-400 text-[10px] uppercase font-bold block">Commodity</span>
-            <span className="font-semibold text-white truncate max-w-xs block">{currentCase.productName}</span>
+          <div className="border-l border-slate-700/80 pl-4 min-w-0">
+            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider block">
+              Packaged Commodity
+            </span>
+            <span className="font-semibold text-white truncate max-w-xs block">
+              {currentCase.productName}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0">
           <div className="text-right hidden sm:block">
-            <span className="text-slate-400 text-[10px] uppercase font-bold block">Inspection Timestamp</span>
-            <span className="font-mono text-slate-300">{currentCase.createdDate}</span>
+            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider block">
+              Time Logged
+            </span>
+            <span className="font-mono text-slate-300 text-[11px]">{currentCase.createdDate}</span>
           </div>
-          <div className="border-l border-slate-700 pl-4 text-right">
-            <span className="text-slate-400 text-[10px] uppercase font-bold block">Authorized Officer</span>
-            <span className="font-bold text-white">{currentCase.officer}</span>
+          <div className="border-l border-slate-700/80 pl-4 text-right">
+            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider block">
+              Investigating Officer
+            </span>
+            <span className="font-bold text-white text-xs">{currentCase.officer.split('(')[0]}</span>
           </div>
         </div>
       </div>
 
-      {/* Horizontal Stepper */}
-      <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-        <div className="flex items-center justify-between overflow-x-auto gap-2 pb-1">
-          {steps.map((step) => {
+      {/* 2. VISUALLY CONNECTED WORKFLOW PIPELINE (Unmistakable Journey) */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+        <div className="relative flex items-center justify-between gap-2 overflow-x-auto py-1">
+          {/* Connecting Base Line */}
+          <div className="absolute top-1/2 -translate-y-1/2 left-6 right-6 h-0.5 bg-slate-200 -z-0 hidden md:block"></div>
+
+          {steps.map((step, idx) => {
             const Icon = step.icon;
             const isCurrent = currentStep === step.num;
             const isPast = currentStep > step.num;
@@ -92,28 +108,39 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
               <button
                 key={step.num}
                 onClick={() => setCurrentStep(step.num)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                className={`relative z-10 flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
                   isCurrent
-                    ? 'bg-blue-700 text-white shadow-xs'
+                    ? 'bg-blue-700 text-white shadow-md ring-4 ring-blue-100'
                     : isPast
-                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
-                    : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-300/80 hover:bg-emerald-100'
+                    : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isCurrent ? 'text-white' : isPast ? 'text-emerald-600' : 'text-slate-400'}`} />
-                <span>{step.label}</span>
+                <div
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] shrink-0 font-mono ${
+                    isCurrent
+                      ? 'bg-white text-blue-800 font-bold'
+                      : isPast
+                      ? 'bg-emerald-600 text-white font-bold'
+                      : 'bg-slate-100 text-slate-500'
+                  }`}
+                >
+                  {isPast ? '✓' : step.num}
+                </div>
+                <div className="text-left">
+                  <div className="leading-tight">{step.short}</div>
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Processing overlay state */}
+      {/* 3. STEP CONTENT WORKSPACE */}
       {isProcessing ? (
         <ScannerProcessing currentCase={currentCase} onComplete={handleProcessingComplete} />
       ) : (
         <>
-          {/* Active Step Content */}
           {currentStep === 1 && (
             <CaptureScreen
               currentCase={currentCase}
@@ -156,25 +183,25 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
         </>
       )}
 
-      {/* Stepper Navigation Footer */}
+      {/* 4. WORKFLOW BOTTOM CONTROLS */}
       {!isProcessing && (
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between text-xs font-semibold">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between text-xs font-semibold">
           <button
             disabled={currentStep === 1}
             onClick={() => setCurrentStep((s) => Math.max(1, s - 1))}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 text-slate-700 rounded-lg flex items-center gap-1.5 transition-colors"
+            className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 text-slate-700 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
-            Previous Step
+            Previous Phase
           </button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={onOpenXRay}
-              className="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center gap-1.5 transition-colors shadow-xs"
             >
-              <Crosshair className="w-3.5 h-3.5 text-cyan-400" />
-              Open Compliance X-Ray
+              <Crosshair className="w-4 h-4 text-cyan-400" />
+              <span>Inspect in Compliance X-Ray</span>
             </button>
 
             {currentStep < 6 && (
@@ -186,9 +213,9 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
                     setCurrentStep((s) => Math.min(6, s + 1));
                   }
                 }}
-                className="px-5 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl flex items-center gap-1.5 transition-colors shadow-sm"
               >
-                Next Step
+                <span>Advance to Next Phase</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             )}
@@ -198,4 +225,3 @@ export const NewInspectionWorkflow: React.FC<NewInspectionWorkflowProps> = ({
     </div>
   );
 };
-
