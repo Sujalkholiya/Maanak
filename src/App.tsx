@@ -110,49 +110,19 @@ export function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* 1. TOP SYSTEM BAR (Clean, Simplified, Government-Grade) */}
-        <div className="no-print h-8 bg-[#07111F] text-slate-300 text-[11px] px-4 sm:px-6 border-b border-slate-800/90 flex items-center justify-between select-none shrink-0 z-40">
-          {/* LEFT: Online indicator + METROSCAN + SIH26034 + Subtitle */}
-          <div className="flex items-center gap-2.5 min-w-0">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-2xs"></span>
-            <span className="font-bold text-white tracking-wider text-xs">METROSCAN</span>
-            <span className="font-mono text-[10px] font-semibold text-blue-300 bg-blue-950/90 px-1.5 py-0.5 rounded border border-blue-800/60 shrink-0 leading-none">
-              SIH26034
-            </span>
-            <span className="text-slate-400 text-[11px] hidden md:inline truncate font-normal">
-              Legal Metrology Compliance Scanner for Packaged Commodities
-            </span>
-          </div>
-
-          {/* RIGHT: RuleDB badge + Demo Environment subtle badge + Sign Out */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            <span className="font-mono text-[10px] font-semibold text-cyan-300 bg-slate-800/90 px-2 py-0.5 rounded border border-slate-700/80 leading-none">
-              RuleDB v2026.3
-            </span>
-            <span className="text-[10px] font-medium text-slate-400 bg-slate-800/50 px-2 py-0.5 rounded border border-slate-700/50 hidden sm:inline leading-none">
-              Demo Environment
-            </span>
-            <button
-              onClick={() => setCurrentView('login')}
-              className="text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer ml-0.5"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-
-        {/* 2. MAIN HEADER / CONTROL BAR */}
+        {/* MAIN HEADER / CONTROL BAR (Single minimal row: Search, Status, Demo Mode, Notifications, Profile) */}
         <TopBar
           onOpenSearch={() => setIsSearchOpen(true)}
           isOfflineMode={isOfflineMode}
           onToggleOffline={() => setIsOfflineMode(!isOfflineMode)}
           onNavigateView={handleNavigate}
           onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          onSignOut={() => setCurrentView('login')}
         />
 
 
         {/* Scrollable Viewport Content */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-100">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 bg-[#F8FAFC]">
           {currentView === 'dashboard' && (
             <DashboardView
               onNavigate={handleNavigate}
