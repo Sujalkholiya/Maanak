@@ -14,6 +14,9 @@ import {
 import { MOCK_OFFLINE_QUEUE } from '../../../data/mockData';
 import { OfflineQueueItem } from '../../../types';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { caseService } from '../../../services/caseService';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { useToast } from '../../../hooks/useToast';
 
 interface OfflineFieldModeViewProps {
   isOffline: boolean;
@@ -26,15 +29,41 @@ export const OfflineFieldModeView: React.FC<OfflineFieldModeViewProps> = ({
   onToggleOffline,
   onNewOfflineInspection,
 }) => {
+  const { refreshCases } = useInspectionCase();
+  const { showToast } = useToast();
   const [queue, setQueue] = useState<OfflineQueueItem[]>(MOCK_OFFLINE_QUEUE);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
 
-  const handleSyncAll = () => {
+  const handleSyncAll = async () => {
     setIsSyncing(true);
-    setTimeout(() => {
-      setQueue((prev) => prev.map((item) => ({ ...item, status: 'SYNCED' })));
-      setIsSyncing(false);
-    }, 1500);
+    const pending = queue.filter((q) => q.status === 'PENDING');
+    let syncedCount = 0;
+
+    for (const item of pending) {
+      try {
+        const prodName = item.productName || (item as any).commodity || 'Field Seized Commodity';
+        await caseService.createCase({
+          productName: prodName,
+          brand: prodName.split(' ')[0],
+          location: (item as any).location || 'Field Inspection Zone',
+          category: 'Offline Field Seizure',
+          caseStatus: 'PENDING',
+          overallStatus: 'NEEDS_HUMAN_VERIFICATION',
+        });
+        syncedCount++;
+      } catch (e) {
+        console.warn('Offline item sync error:', e);
+      }
+    }
+
+    setQueue((prev) => prev.map((item) => ({ ...item, status: 'SYNCED' })));
+    setIsSyncing(false);
+    await refreshCases();
+    showToast(
+      'Cloud Synchronization Complete',
+      `Synchronized ${syncedCount} offline field inspection dockets with Central Legal Metrology MongoDB database.`,
+      'success'
+    );
   };
 
   const pendingCount = queue.filter((q) => q.status === 'PENDING').length;

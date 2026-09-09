@@ -8,7 +8,11 @@ export type CaseStatus =
   | 'Needs Review'
   | 'Verified'
   | 'Rejected'
-  | 'Closed';
+  | 'Closed'
+  | 'PENDING'
+  | 'IN_PROGRESS'
+  | 'UNDER_REVIEW'
+  | 'COMPLETED';
 
 export type PriorityLevel = 'High' | 'Medium' | 'Low';
 
@@ -78,6 +82,7 @@ export interface RuleEvaluation {
 
 export interface InspectionCase {
   id: string;
+  caseId?: string;
   productName: string;
   brand: string;
   manufacturer: string;

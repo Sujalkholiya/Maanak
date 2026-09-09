@@ -7,12 +7,16 @@ const {
     updateCase,
     updateInspection,
     updateVerification,
-    deleteCase
+    deleteCase,
+    getCaseStats,
+    getCaseAuditTrail
 } = require("../Controllers/case");
 
 const router = express.Router();
 
 router.get("/", getCases); // all
+router.get("/stats", getCaseStats); // aggregated stats
+router.get("/audit", getCaseAuditTrail); // chronological audit trail
 router.get("/:id", getCaseById); // by id or caseId
 router.post("/", createCase); // make case
 router.put("/:id", updateCase); // update

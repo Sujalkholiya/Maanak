@@ -175,4 +175,28 @@ export const caseService = {
         c.category.toLowerCase().includes(q)
     );
   },
+
+  async getStats(): Promise<any> {
+    try {
+      const res = await api.get<{ success: boolean; stats: any }>('/cases/stats');
+      if (res && res.stats) {
+        return res.stats;
+      }
+    } catch (e) {
+      console.warn('API /cases/stats unavailable:', e);
+    }
+    return null;
+  },
+
+  async getAuditTrail(): Promise<any[]> {
+    try {
+      const res = await api.get<{ success: boolean; auditLogs: any[] }>('/cases/audit');
+      if (res && Array.isArray(res.auditLogs)) {
+        return res.auditLogs;
+      }
+    } catch (e) {
+      console.warn('API /cases/audit unavailable:', e);
+    }
+    return [];
+  },
 };

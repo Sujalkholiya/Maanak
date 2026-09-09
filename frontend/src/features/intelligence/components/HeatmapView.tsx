@@ -12,14 +12,41 @@ import {
 } from 'lucide-react';
 import { MOCK_HEATMAP_DATA } from '../../../data/mockData';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
 
 export const HeatmapView: React.FC = () => {
+  const { allCases } = useInspectionCase();
   const [selectedCommodity, setSelectedCommodity] = useState('ALL');
   const [selectedFinding, setSelectedFinding] = useState('ALL');
   const [activeRegion, setActiveRegion] = useState<string>('Delhi NCR');
 
+  // Dynamically enrich heatmap regions with real cases in database
+  const liveHeatmapData = React.useMemo(() => {
+    return MOCK_HEATMAP_DATA.map((region) => {
+      const regionCases = allCases.filter((c) =>
+        (c.location || '').toLowerCase().includes(region.state.toLowerCase().split(' ')[0])
+      );
+
+      if (regionCases.length === 0) return region;
+
+      const compliant = regionCases.filter((c) => c.overallStatus === 'COMPLIANT').length;
+      const potentialIssues = regionCases.filter((c) => c.overallStatus === 'POTENTIAL_NON_COMPLIANCE').length;
+      const verificationRequired = regionCases.filter((c) => c.overallStatus === 'NEEDS_HUMAN_VERIFICATION').length;
+      const total = regionCases.length;
+
+      return {
+        ...region,
+        inspections: region.inspections + total,
+        compliant: region.compliant + compliant,
+        potentialIssues: region.potentialIssues + potentialIssues,
+        verificationRequired: region.verificationRequired + verificationRequired,
+        complianceRate: Math.round(((region.compliant + compliant) / (region.inspections + total)) * 100),
+      };
+    });
+  }, [allCases]);
+
   const selectedData =
-    MOCK_HEATMAP_DATA.find((d) => d.state === activeRegion) || MOCK_HEATMAP_DATA[0];
+    liveHeatmapData.find((d) => d.state === activeRegion) || liveHeatmapData[0];
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
@@ -263,7 +290,7 @@ export const HeatmapView: React.FC = () => {
                 All Zone Summaries
               </div>
               <div className="space-y-1.5 text-xs">
-                {MOCK_HEATMAP_DATA.map((d) => (
+                {liveHeatmapData.map((d) => (
                   <div
                     key={d.state}
                     onClick={() => setActiveRegion(d.state)}

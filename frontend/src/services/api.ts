@@ -40,11 +40,14 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   const isFormData = customConfig.body instanceof FormData;
 
+  const token = typeof window !== 'undefined' ? localStorage.getItem('maanak_token') : null;
+
   const defaultHeaders: HeadersInit = isFormData
-    ? {}
+    ? (token ? { Authorization: `Bearer ${token}` } : {})
     : {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       };
 
   const config: RequestInit = {

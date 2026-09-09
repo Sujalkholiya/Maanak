@@ -9,8 +9,11 @@ import {
   Info,
   Menu,
   LogOut,
+  User,
 } from 'lucide-react';
 import { MOCK_NOTIFICATIONS } from '../../data/mockData';
+import { useAuth } from '../../app/providers/AuthContext';
+import { useInspectionCase } from '../../hooks/useInspectionCase';
 
 interface TopBarProps {
   onOpenSearch: () => void;
@@ -27,12 +30,42 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenMobileMenu,
   onSignOut,
 }) => {
+  const { user, logout } = useAuth();
+  const { allCases, selectCase } = useInspectionCase();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const unreadCount = MOCK_NOTIFICATIONS.filter((n) => n.unread).length;
 
+  const notifications = React.useMemo(() => {
+    const liveAlerts = allCases
+      .filter((c) => c.overallStatus === 'POTENTIAL_NON_COMPLIANCE' || c.overallStatus === 'NEEDS_HUMAN_VERIFICATION')
+      .slice(0, 6)
+      .map((c) => ({
+        id: `notif-${c.id}`,
+        caseId: c.id,
+        type: (c.overallStatus === 'POTENTIAL_NON_COMPLIANCE' ? 'ALERT' : 'WARNING') as 'ALERT' | 'WARNING',
+        title: c.overallStatus === 'POTENTIAL_NON_COMPLIANCE' ? `Defect Flagged: ${c.productName}` : `Verification Required: ${c.productName}`,
+        message: `Case ${c.caseId || c.id} at ${c.location || 'Depot'} has statutory findings requiring officer sign-off.`,
+        time: c.createdDate || 'Recent',
+        unread: true,
+      }));
+    return liveAlerts.length > 0 ? liveAlerts : MOCK_NOTIFICATIONS;
+  }, [allCases]);
+
+  const unreadCount = notifications.filter((n) => n.unread).length;
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const officerName = user?.fullName || user?.userName || 'Vikram Sharma';
+  const officerId = user?.officerId || 'LM-DL-4029';
+  const officerRole = user?.role || 'Gazetted Inspector';
+  const officerDept = user?.department || 'Enforcement Wing, Zone-I';
+  const initials = officerName
+    .split(' ')
+    .filter(Boolean)
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase() || 'LM';
 
   // Close dropdowns on outside click or Escape key
   useEffect(() => {
@@ -166,7 +199,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 </span>
               </div>
               <div className="max-h-80 overflow-y-auto divide-y divide-[#E6E4DF]">
-                {MOCK_NOTIFICATIONS.map((n) => (
+                {notifications.map((n) => (
                   <div
                     key={n.id}
                     className={`p-3 text-xs hover:bg-[#F7F6F3] transition-colors cursor-pointer ${
@@ -174,6 +207,9 @@ export const TopBar: React.FC<TopBarProps> = ({
                     }`}
                     onClick={() => {
                       setShowNotifications(false);
+                      if ((n as any).caseId) {
+                        selectCase((n as any).caseId);
+                      }
                       onNavigateView('cases');
                     }}
                   >
@@ -183,12 +219,6 @@ export const TopBar: React.FC<TopBarProps> = ({
                       )}
                       {n.type === 'WARNING' && (
                         <AlertTriangle className="w-4 h-4 text-[#C98A2C] shrink-0 mt-0.5" />
-                      )}
-                      {n.type === 'INFO' && (
-                        <Info className="w-4 h-4 text-[#0E8A8A] shrink-0 mt-0.5" />
-                      )}
-                      {n.type === 'SUCCESS' && (
-                        <CheckCircle2 className="w-4 h-4 text-[#2F7D5F] shrink-0 mt-0.5" />
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-[#111413]">{n.title}</div>
@@ -206,7 +236,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* SUBTLE VERTICAL DIVIDER */}
         <div className="hidden sm:block h-6 w-[1px] bg-[#E6E4DF] shrink-0"></div>
 
-        {/* USER PROFILE: [ VS Vikram Sharma ˅ ] */}
+        {/* USER PROFILE: [ Initials + Name ] */}
         <div className="relative shrink-0" ref={profileRef}>
           <button
             onClick={() => setShowProfileMenu((prev) => !prev)}
@@ -215,18 +245,17 @@ export const TopBar: React.FC<TopBarProps> = ({
                 ? 'bg-[#F7F6F3] border border-[#D5D2CA]'
                 : 'hover:bg-[#F7F6F3] border border-transparent hover:border-[#E6E4DF]'
             }`}
-            title="Officer Profile: Vikram Sharma"
+            title={`Officer Profile: ${officerName}`}
             aria-label="Officer Profile"
           >
             <div className="w-8 h-8 rounded-full bg-[#0F1F1E] text-[#22C2C2] border border-[#1E3836] flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-              VS
+              {initials}
             </div>
 
             {/* Officer Name - Responsive */}
             <div className="hidden sm:block text-left min-w-0">
               <span className="text-xs font-semibold text-[#111413] leading-none truncate block">
-                <span className="hidden lg:inline">Vikram Sharma</span>
-                <span className="hidden md:inline lg:hidden">Vikram</span>
+                {officerName}
               </span>
             </div>
 
@@ -243,19 +272,19 @@ export const TopBar: React.FC<TopBarProps> = ({
               <div className="flex items-center gap-2.5 pb-2.5 border-b border-[#E6E4DF]">
                 <Shield className="w-5 h-5 text-[#0E8A8A] shrink-0" />
                 <div className="min-w-0">
-                  <div className="font-bold text-[#111413] truncate">Officer Vikram Sharma</div>
-                  <div className="text-[#727A78] text-[11px]">Enforcement Wing, Zone-I</div>
-                  <div className="text-[#0E8A8A] font-mono text-[10px]">ID: LM-DL-4029 · Dy Controller</div>
+                  <div className="font-bold text-[#111413] truncate">{officerName}</div>
+                  <div className="text-[#727A78] text-[11px] truncate">{officerDept}</div>
+                  <div className="text-[#0E8A8A] font-mono text-[10px]">ID: {officerId} · {officerRole}</div>
                 </div>
               </div>
               <div className="py-2.5 space-y-1.5 text-[#3F4544] text-[11px]">
                 <div className="flex justify-between">
                   <span>Jurisdiction:</span>
-                  <span className="font-semibold text-[#111413]">New Delhi Division</span>
+                  <span className="font-semibold text-[#111413]">Zone-I HQ, New Delhi</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Enforcement Role:</span>
-                  <span className="font-semibold text-[#111413]">Gazetted Inspector</span>
+                  <span className="font-semibold text-[#111413]">{officerRole}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Digital Certificate:</span>
@@ -263,21 +292,20 @@ export const TopBar: React.FC<TopBarProps> = ({
                 </div>
               </div>
               <div className="pt-2 border-t border-[#E6E4DF] flex gap-2">
-                {onSignOut && (
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      onSignOut();
-                    }}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-[#FBF0EF] hover:bg-[#F7DCDA] text-[#C1443A] font-semibold border border-[#F4D6D4] transition-colors text-xs"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    Sign Out
-                  </button>
-                )}
+                <button
+                  onClick={async () => {
+                    setShowProfileMenu(false);
+                    await logout();
+                    if (onSignOut) onSignOut();
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-[#FBF0EF] hover:bg-[#F7DCDA] text-[#C1443A] font-semibold border border-[#F4D6D4] transition-colors text-xs cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Sign Out
+                </button>
                 <button
                   onClick={() => setShowProfileMenu(false)}
-                  className="flex-1 text-center py-1.5 rounded-lg bg-[#F7F6F3] hover:bg-[#EFECE6] text-[#3F4544] font-semibold transition-colors text-xs border border-[#E6E4DF]"
+                  className="flex-1 text-center py-1.5 rounded-lg bg-[#F7F6F3] hover:bg-[#EFECE6] text-[#3F4544] font-semibold transition-colors text-xs border border-[#E6E4DF] cursor-pointer"
                 >
                   Close
                 </button>
