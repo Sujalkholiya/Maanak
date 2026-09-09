@@ -95,10 +95,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       {/* Brand Header */}
       <div className="p-4 border-b border-[#1A2F2D] flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F1F1E] to-[#1E4D48] flex items-center justify-center p-2 shadow-md shadow-[#0F1F1E]/80 border border-[#22C2C2]/30 shrink-0 overflow-hidden">
+        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md shadow-black/20 border border-[#22C2C2]/30 shrink-0 overflow-hidden">
           <img
-            src="/sunburst.png"
-            alt="Maanak Symbol"
+            src="/logo.png"
+            alt="Maanak Logo"
             className="w-full h-full object-contain"
           />
         </div>

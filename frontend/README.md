@@ -1,174 +1,167 @@
-# METROSCAN (SIH26034) — Legal Metrology Frontend
+# maanak Frontend Architecture
 
-> **Automated Package Inspection & Legal Metrology Compliance Platform**  
-> Built for Legal Metrology Officers, Field Inspectors, and Compliance Enforcement Authorities.
+This frontend is the user-facing layer of the METROSCAN Legal Metrology inspection platform. It is built as a Vite + React + TypeScript application that presents inspection workflows, compliance review tools, case management, evidence handling, analytics, and enforcement dashboards.
 
----
+The frontend is organized around a route-based shell and a set of feature pages. It uses a composable UI architecture where shared layout components, global providers, feature pages, hooks, data, and services sit behind a single React application root.
 
-## 📌 Project Overview
+## 1. High-Level Architecture
 
-**METROSCAN** is a high-performance web platform designed to automate and streamline compliance auditing under the **Legal Metrology (Packaged Commodities) Rules, 2011** and the **Legal Metrology Act, 2009** (India).
+The frontend runtime is intentionally simple:
 
-The application enables field inspection officers and enforcement authorities to:
-- **Scan & Extract**: Capture physical package labeling and leverage structured OCR to extract mandatory declarations in both English and Hindi.
-- **Audit & Verify**: Compute dynamic legal applicability, inspect Principal Display Panel (PDP) font size/area ratios, compare physical packaging with online e-commerce listings, and review bounding box evidence overlays (Compliance X-Ray).
-- **Enforce & Report**: Manage inspection cases, conduct officer human-in-the-loop verification, generate official statutory legal notices, and trace chain of custody via SHA-256 hashed evidence vaults.
-- **Intelligence & Analytics**: Monitor manufacturer compliance histories, spatial violation heatmaps, and city/district enforcement analytics.
-- **Offline Reliability**: Operate in low-connectivity/remote field locations with cached offline queues and automated sync pipelines.
+1. `main.tsx` mounts the React application.
+2. `App.tsx` creates the app shell by wrapping the router in application providers.
+3. `app/router/index.tsx` defines the route tree using `createBrowserRouter`.
+4. `layout/MainLayout` and `layout/AuthLayout` provide the different UI environments.
+5. Page components under `src/pages` represent the product’s user-facing business screens.
 
----
+The architecture follows a classic feature-page layout:
 
-## 🛠️ Technology Stack
+- Layout and navigation are reusable across pages.
+- Routes are declared centrally in the router.
+- Pages are lazy loaded for code splitting.
+- Providers decorate the UI with cross-cutting concerns such as toast messaging and case context.
+- Feature folders keep the UI organized by business domain such as cases, inspection, rules, intelligence, and evidence.
 
-| Layer / Tool | Technology | Description |
-| :--- | :--- | :--- |
-| **Core Framework** | React `v19.2.8` | High-efficiency component architecture with React 19 hooks |
-| **Language** | TypeScript `v6.0.2` | End-to-end static typing, interfaces, and strict type safety |
-| **Build Tool & Dev Server**| Vite `v8.2.2` | Lightning-fast HMR and optimized production bundling |
-| **Styling & Design** | Tailwind CSS `v4.3.3` | Utility-first styling with modern Vite Tailwind integration |
-| **Iconography** | Lucide React `v1.42.0` | Accessible, consistent SVG icons |
-| **Class Utilities** | `clsx` & `tailwind-merge` | Safe dynamic class merging and conditional styling |
-| **Code Quality & Linting** | Oxlint `v1.79.0` | Next-gen high-speed Rust-based code linter |
+## 2. Application Startup Flow
 
----
+The startup flow is:
 
-## 🚀 Key Modules & Capabilities
+- `src/main.tsx` renders `<App />`
+- `src/App.tsx` uses `AppProviders` and `RouterProvider`
+- `src/app/providers/AppProviders.tsx` composes global providers
+- `src/app/router/index.tsx` builds the route tree and maps URLs to pages
 
-### 1. 🔍 Primary Workspace
-- **Dashboard (`DashboardView`)**: High-level executive overview with metrics, active case feeds, enforcement priority queues, and quick action shortcuts.
-- **Guided New Inspection (`NewInspectionWorkflow`)**: Step-by-step wizard guiding officers through commodity category selection, package scanning, and preliminary rule applicability setup.
-- **Scan Package (`CaptureScreen`)**: Multi-angle camera stream viewport with real-time bounding box segmentation and OCR capture controls.
-- **Compliance X-Ray (`ComplianceXRay`)**: Interactive visual inspection canvas displaying color-coded bounding boxes (Compliant, Non-Compliant, Needs Review), rule citations, legal limits, and confidence metrics overlaid directly on high-res package imagery.
-- **Case Management (`CaseManagementView`)**: Filterable registry of all active, closed, and flagged inspection cases with status badges and officer assignments.
+This separation is useful because it keeps routing, context, and layout concerns independent. If you want to add a new product screen, the main work is usually:
 
-### 2. ⚡ Inspection & Verification Workspace
-- **Structured OCR Workspace (`DeclarationWorkspace`)**: Side-by-side extraction interface for mandatory declarations (Net Quantity, MRP, Date of Manufacture, Country of Origin, Batch Number, Customer Care details) with manual override and bilingual verification.
-- **Applicability Engine (`ApplicabilityEngineView`)**: Dynamic rule evaluator evaluating statutory clauses based on commodity types, imported status, institutional packaging exemptions, and packaging dimensions.
-- **Font & PDP Analysis (`FontPdpAnalysisView`)**: Automated measurement of Principal Display Panel area, font height thresholds relative to surface area, contrast ratios, and text legibility metrics.
-- **Product vs Online Listing (`EcommerceComparisonView`)**: Audit tool comparing physical packaging declarations against e-commerce PDP listings (e.g., Amazon, Flipkart, Blinkit, Instamart) to identify online consumer misdeclarations.
-- **Officer Review (`HumanVerificationView`)**: Human-in-the-loop verification portal allowing legal officers to confirm findings, leave officer notes, approve legal notices, or trigger rescans.
+1. Add a new lazy page import in the router.
+2. Add a route entry with the page element.
+3. Build the page under `src/pages/...`.
+4. Reuse existing layout, data, types, and shared UI components if possible.
 
-### 3. 📊 Intelligence, Records & Governance
-- **Inspection Reports (`InspectionReportView`)**: Official legal notice generator producing printable/exportable statutory inspection certificates and formal violation notices under the Legal Metrology Act.
-- **Evidence Vault (`EvidenceVaultView`)**: Secure, immutable evidence repository recording digital signatures, capture timestamps, device identifiers, and SHA-256 hashes for judicial admissibility.
-- **Manufacturer Intelligence (`ManufacturerIntelligenceView`)**: Comprehensive profiling of manufacturers and brands, compliance scores, recurring violation patterns, and historical audit timelines.
-- **Geographic Heatmap (`HeatmapView`)**: Spatial mapping of non-compliance hotspots across states, districts, and retail markets.
-- **Compliance Analytics (`AnalyticsView`)**: Metric breakdown of inspection throughput, rule violation frequencies, commodity trends, and enforcement efficiency.
-- **Audit Trail (`AuditTrailView`)**: Immutable system activity log recording every officer action, status shift, data modification, and system login event.
-- **Rule Library (`RuleLibraryView`)**: Standardized repository of Legal Metrology Act sections, Packaged Commodity Rules, dimensional threshold tables, and statutory penalty schedules.
-- **Offline Field Mode (`OfflineFieldModeView`)**: Field inspection interface supporting offline state caching, local queue management, and automated background sync when connection is restored.
+## 3. Routing Model
 
----
+The router in `src/app/router/index.tsx` is a nested browser router with two top-level areas:
 
-## 📁 Directory Structure
+- `/` and the authenticated application area using `MainLayout`
+- `/login` using `AuthLayout`
 
+The main flow is organized around the product workflow:
+
+- Dashboard
+- Inspection workflow pages
+- Declaration workspace
+- Applicability engine
+- Font and PDP analysis
+- Human verification
+- Evidence vault
+- Reports
+- Cases and compliance intelligence
+- Rule library
+- Offline mode
+- Settings
+
+Routes are declared in a centralized array using `createBrowserRouter`. Because the router uses lazy loading for page modules, the app can split the UI into smaller bundles as the user navigates.
+
+## 4. Provider and State Architecture
+
+The global providers are defined in `src/app/providers/`:
+
+- `AppProviders.tsx` composes the application providers
+- `CaseContext.tsx` holds application case or inspection context
+- `ToastContext.tsx` provides cross-component toast feedback
+
+These providers wrap the routing tree so that the UI can expose contextual state without threading props through every screen. This is the correct place for cross-cutting, application-wide state that must be visible across many pages.
+
+## 5. UI Layer Composition
+
+The frontend uses a layered UI structure:
+
+- `src/layouts/` contains the top-level page wrappers for the main app and Auth screens.
+- `src/components/common/` contains reusable navigation and UI widgets such as the sidebar, top bar, modal search, shortcuts, status badge, and toast system.
+- `src/components/views/` contains the classic view components that are used by the feature pages or screens.
+- `src/pages/` is the route-oriented page layer.
+
+This preserves separation of responsibilities:
+
+- `components/common` defines infrastructure UI.
+- `components/views` or scaffolder screens expose page content.
+- `pages` act as the route boundary and orchestration layer.
+
+## 6. Feature Domain Organization
+
+The codebase is grouped by business and product domain rather than a single flat screen file layout.
+
+Important folders:
+
+- `src/features/auth/` → login and authentication concepts
+- `src/features/cases/` → case management and inspection case workflows
+- `src/features/compliance/` → compliance and rule evaluation UI
+- `src/features/dashboard/` → dashboard and executive metrics
+- `src/features/evidence/` → evidence vault and digital evidence concepts
+- `src/features/inspection/` → scanning, compliance X-Ray, declaration, and inspection verification
+- `src/features/intelligence/` → analytics, heatmaps, ecommerce comparison, and manufacturer intelligence
+- `src/features/offline/` → offline queue and field sync pattern support
+- `src/features/reports/` → report and notice generation concepts
+- `src/features/settings/` → user and admin settings
+
+The `src/hooks/` folder contains reusable custom hooks such as route navigation, keyboard shortcuts, inspection case handling, and toasts.
+
+## 7. Data and Type Model
+
+The frontend uses TypeScript types and mock data to model the UI.
+
+- `src/types/` defines cross-cutting domain shapes and route-related types.
+- `src/data/mockData.ts` provides sample data used for UI development and product demonstration.
+- `src/services/` is where the frontend can interact with API or backend integration services.
+
+This means the frontend is ready to separate view rendering from backend data handling. The current repository uses mock/data-driven screens while keeping a clean place to add real API adapters.
+
+## 8. Styling and Design System
+
+The frontend styling layer is intentionally light and modern:
+
+- Vite is the build and development server.
+- TypeScript performs compile-time safety.
+- React Router v7 handles route navigation.
+- `clsx` and `tailwind-merge` support safe conditional UI classes.
+- `lucide-react` supplies icons.
+- `Tailwind CSS` provides utility style primitives.
+
+The UI follows a slate/dark-navigation product style with green, red, and amber compliance indicators across the application. The architecture does not enforce strict design tokens yet, but the styling intent is consistent throughout the UI.
+
+## 9. Workflow Summary
+
+A typical product workflow will look like this:
+
+1. An officer opens the application and lands on the dashboard or login view.
+2. The officer begins a new inspection from the route `/inspection/new`.
+3. The package scan and compliance inspection screens are used to capture labels and evidence.
+4. The review tools such as declaration workspace, ruling engine, font and PDP checks, and ecommerce comparison validate declarations.
+5. Findings are routed into cases, evidence, reports, and analytics pages.
+6. The enforcement dashboard and rule library provide governance, auditability, and reporting output.
+
+## 10. Development Commands
+
+From the frontend directory:
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
+npm run preview
 ```
-frontend/
-├── public/                     # Static assets (images, logos, static files)
-├── src/
-│   ├── assets/                 # Application images & icons
-│   ├── components/
-│   │   ├── common/             # Shared UI components
-│   │   │   ├── DemoBadge.tsx               # Demo status indicator badge
-│   │   │   ├── GlobalSearchModal.tsx       # Universal Ctrl+K search modal
-│   │   │   ├── Sidebar.tsx                 # Tiered primary navigation drawer
-│   │   │   ├── StatusBadge.tsx             # Compliance state indicator badge
-│   │   │   └── TopBar.tsx                  # Global header & system control bar
-│   │   └── views/              # Main application views & feature screens
-│   │       ├── AnalyticsView.tsx
-│   │       ├── ApplicabilityEngineView.tsx
-│   │       ├── AuditTrailView.tsx
-│   │       ├── AuthView.tsx
-│   │       ├── CaptureScreen.tsx
-│   │       ├── CaseManagementView.tsx
-│   │       ├── ComplianceXRay.tsx
-│   │       ├── DeclarationWorkspace.tsx
-│   │       ├── EcommerceComparisonView.tsx
-│   │       ├── EvidenceVaultView.tsx
-│   │       ├── FontPdpAnalysisView.tsx
-│   │       ├── HeatmapView.tsx
-│   │       ├── HumanVerificationView.tsx
-│   │       ├── InspectionReportView.tsx
-│   │       ├── ManufacturerIntelligenceView.tsx
-│   │       ├── NewInspectionWorkflow.tsx
-│   │       ├── OfflineFieldModeView.tsx
-│   │       ├── RuleEngineView.tsx
-│   │       ├── RuleLibraryView.tsx
-│   │       ├── ScannerProcessing.tsx
-│   │       └── SettingsView.tsx
-│   ├── data/                   # Mock datasets & demo case data
-│   │   └── mockData.ts
-│   ├── types/                  # TypeScript interface definitions
-│   │   └── index.ts
-│   ├── App.css                 # Custom application component styles
-│   ├── App.tsx                 # Root application component & layout shell
-│   ├── index.css               # Base Tailwind CSS v4 import & global styles
-│   └── main.tsx                # React DOM entry point
-├── .gitignore
-├── .oxlintrc.json              # Oxlint linting configuration
-├── index.html                  # HTML5 document root
-├── package.json                # Project dependencies and npm scripts
-├── tsconfig.json               # Root TypeScript configuration
-├── tsconfig.app.json           # Application TypeScript compiler options
-├── tsconfig.node.json          # Vite node setup TypeScript configuration
-└── vite.config.ts              # Vite bundle & plugin configuration
-```
 
----
+## 11. Architectural Principles
 
-## 🚦 Getting Started
+The frontend is designed according to a few clear principles:
 
-### Prerequisites
+- Centralize route and UI composition.
+- Use page-level lazy loading for scalable routing.
+- Keep reusable UI in common components.
+- Use providers for cross-cutting state.
+- Group related screens by domain logic and workflow stage.
+- Keep types and mock data explicit to support future backend integration.
 
-Ensure you have the following installed on your development machine:
-- **Node.js**: `v18.0.0` or higher (Recommended: `v20+`)
-- **Package Manager**: `npm` (comes with Node.js) or `yarn` / `pnpm`
+That combination gives the UI a strong product structure while keeping expansion easy as the METROSCAN platform grows.
 
-### Installation
-
-1. Navigate to the `frontend` directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install all project dependencies:
-   ```bash
-   npm install
-   ```
-
----
-
-## 💻 Development & Build Commands
-
-| Command | Action | Description |
-| :--- | :--- | :--- |
-| `npm run dev` | **Start Dev Server** | Launches Vite development server with Hot Module Replacement (HMR) at `http://localhost:5173` |
-| `npm run build` | **Production Build** | Runs TypeScript type checking (`tsc -b`) and builds production assets into `dist/` |
-| `npm run preview` | **Preview Build** | Locally serves the built production bundle for testing |
-| `npm run lint` | **Run Oxlint** | Performs fast static code analysis & linting using Oxlint |
-
----
-
-## ⌨️ Universal Keyboard Shortcuts & Controls
-
-- **`Ctrl + K` / `Cmd + K`**: Opens the **Global Universal Search Modal** from anywhere in the application to search cases, rules, manufacturers, or jump directly to any view.
-- **Offline Toggle**: Use the header control bar or Offline Field Mode view to simulate remote field operations with local data caching.
-- **Mobile Menu**: Responsive drawer menu accessible via hamburger button on smaller viewports.
-
----
-
-## 🎨 Design System & Theme Principles
-
-- **Primary Slate Palette**: Deep dark slate sidebar (`#0B192C`), slate workspace canvas (`#F8FAFC`), crisp border contrasts for high clarity in field environments.
-- **Compliance Visual Indicators**:
-  - 🟢 **COMPLIANT**: Green status badge & bounding box (`#10B981`)
-  - 🔴 **POTENTIAL_NON_COMPLIANCE**: Red status badge & bounding box (`#EF4444`)
-  - 🟡 **NEEDS_HUMAN_VERIFICATION**: Amber status badge & bounding box (`#F59E0B`)
-- **Typography**: Clean system sans-serif font stack optimized for tabular inspection data, bilingual Hindi/English declarations, and statutory compliance reading.
-
----
-
-## 📜 License & Project Context
-
-Developed for **SIH 2026 / Legal Metrology Hackathon Project (SIH26034)**.  
-All Rights Reserved © 2026 METROSCAN Compliance Systems.

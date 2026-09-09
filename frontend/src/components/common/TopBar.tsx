@@ -80,12 +80,12 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group"
           title="MAANAK · Legal Metrology Compliance Platform"
         >
-          {/* Sized appropriately (20–24px) transparent sunburst symbol */}
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[#0F1F1E] to-[#1E4D48] flex items-center justify-center p-1.5 text-white shadow-xs border border-[#22C2C2]/30 shrink-0 overflow-hidden">
+          {/* Sized appropriately transparent logo emblem */}
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white flex items-center justify-center p-1 shadow-xs border border-[#E6E4DF] shrink-0 overflow-hidden">
             <img
-              src="/sunburst.png"
-              alt="Maanak Symbol"
-              className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+              src="/logo.png"
+              alt="Maanak Logo"
+              className="w-full h-full object-contain"
             />
           </div>
 
