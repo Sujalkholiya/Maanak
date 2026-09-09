@@ -3,14 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   Building2,
   Package,
-  Tag,
-  Scale,
-  Barcode,
-  Calendar,
   PlusCircle,
   ArrowRight,
-  ShieldCheck,
-  MapPin,
 } from 'lucide-react';
 import { useInspectionCase } from '../../../hooks/useInspectionCase';
 import { useToast } from '../../../hooks/useToast';
@@ -32,18 +26,12 @@ export const ProductIntakeForm: React.FC<ProductIntakeFormProps> = ({
   const [premisesAddress, setPremisesAddress] = useState('');
   const [commodityName, setCommodityName] = useState('');
   const [brand, setBrand] = useState('');
-  const [packSize, setPackSize] = useState('');
-  const [batchCode, setBatchCode] = useState('');
-  const [mfgMonthYear, setMfgMonthYear] = useState('');
 
   const handleFillSample = () => {
     setPremisesName('Royal Feast Confectionery Ltd.');
     setPremisesAddress('Plot 42, Okhla Industrial Area Phase-III, New Delhi - 110020');
     setCommodityName('Roasted California Almonds');
     setBrand('Royal Feast');
-    setPackSize('500 g');
-    setBatchCode('BATCH-2026-X89');
-    setMfgMonthYear('08/2026');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,10 +42,7 @@ export const ProductIntakeForm: React.FC<ProductIntakeFormProps> = ({
       !premisesName.trim() ||
       !premisesAddress.trim() ||
       !commodityName.trim() ||
-      !brand.trim() ||
-      !packSize.trim() ||
-      !batchCode.trim() ||
-      !mfgMonthYear.trim()
+      !brand.trim()
     ) {
       showToast(
         'Mandatory Fields Incomplete',
@@ -78,18 +63,12 @@ export const ProductIntakeForm: React.FC<ProductIntakeFormProps> = ({
       if (d.fieldId === 'f3' || d.label.includes('Name') || d.label.includes('Commodity')) {
         return { ...d, detectedValue: fullProductName };
       }
-      if (d.fieldId === 'f4' || d.label.includes('Quantity')) {
-        return { ...d, detectedValue: packSize.trim() };
-      }
-      if (d.fieldId === 'f7' || d.label.includes('Manufacture') || d.label.includes('Packing')) {
-        return { ...d, detectedValue: mfgMonthYear.trim() };
-      }
       return d;
     });
 
     // Update current inspection case in context
     updateCurrentCase({
-      productName: `${fullProductName} (${packSize.trim()})`,
+      productName: fullProductName,
       manufacturer: fullPremises,
       declarations: updatedDeclarations,
     });
@@ -237,69 +216,6 @@ export const ProductIntakeForm: React.FC<ProductIntakeFormProps> = ({
                 />
                 <span className="text-[10px] text-[#727A78] mt-1 block">
                   Trade brand or commercial label name
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="h-px bg-[#E6E4DF]" />
-
-          {/* Section 3: Pack Size, Batch Code & Dates */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#727A78]">
-              <Scale className="w-3.5 h-3.5 text-[#0E8A8A]" />
-              <span>3. Pack Size & Manufacturing Details</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-[#111413] mb-1.5">
-                  Pack Size <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={packSize}
-                  onChange={(e) => setPackSize(e.target.value)}
-                  placeholder="e.g., 500 g, 1 kg, 750 ml"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E4DF] bg-white text-xs sm:text-sm font-medium text-[#111413] focus:outline-hidden focus:border-[#22C2C2] focus:ring-2 focus:ring-[#22C2C2]/20 transition-all placeholder:text-[#9EA6A4]"
-                />
-                <span className="text-[10px] text-[#727A78] mt-1 block">
-                  Net quantity declared on package
-                </span>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#111413] mb-1.5">
-                  Lot / Batch Code <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={batchCode}
-                  onChange={(e) => setBatchCode(e.target.value)}
-                  placeholder="e.g., BATCH-2026-X89"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E4DF] bg-white text-xs sm:text-sm font-medium text-[#111413] focus:outline-hidden focus:border-[#22C2C2] focus:ring-2 focus:ring-[#22C2C2]/20 transition-all placeholder:text-[#9EA6A4]"
-                />
-                <span className="text-[10px] text-[#727A78] mt-1 block">
-                  Identification lot or production batch code
-                </span>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#111413] mb-1.5">
-                  Month & Year of Manufacture / Packing <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={mfgMonthYear}
-                  onChange={(e) => setMfgMonthYear(e.target.value)}
-                  placeholder="e.g., 08/2026 or August 2026"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E4DF] bg-white text-xs sm:text-sm font-medium text-[#111413] focus:outline-hidden focus:border-[#22C2C2] focus:ring-2 focus:ring-[#22C2C2]/20 transition-all placeholder:text-[#9EA6A4]"
-                />
-                <span className="text-[10px] text-[#727A78] mt-1 block">
-                  Date of packing or manufacture
                 </span>
               </div>
             </div>
