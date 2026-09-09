@@ -1,0 +1,25 @@
+{
+  "mode_available": true,
+  "api_status": "UNAVAILABLE (endpoint 502)",
+  "fallback_active": true,
+  "results": {
+    "COMPLIANT": {
+      "status": "COMPLIANT",
+      "confidence": 0.55,
+      "ai_status": "DEMO_FALLBACK",
+      "violations": 1
+    },
+    "NON_COMPLIANT": {
+      "status": "NON_COMPLIANT",
+      "confidence": 0.85,
+      "ai_status": "DEMO_FALLBACK",
+      "violations": 8
+    },
+    "REVIEW_REQUIRED": {
+      "status": "REVIEW_REQUIRED",
+      "confidence": 0.55,
+      "ai_status": "DEMO_FALLBACK",
+      "violations": 1
+    }
+  }
+}

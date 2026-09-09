@@ -1,0 +1,334 @@
+[
+  {
+    "applicability_rule_id": "APP_RULE_BULK_QUANTITY_EXEMPTION",
+    "rule_reference": "Rule 3(a) & Rule 3(b)",
+    "package_category": "Bulk Packages / Large Wholesale Containers",
+    "conditions": [
+      "net_quantity_metric_weight > 25.0 and unit == 'kg'",
+      "net_quantity_metric_volume > 25.0 and unit == 'litre'",
+      "commodity_category in ['cement', 'fertilizer', 'agricultural_farm_produce'] and net_quantity_metric_weight > 50.0 and unit == 'kg'"
+    ],
+    "exclusions": [
+      "retail_packages <= 25.0 kg or <= 25.0 L",
+      "cement, fertilizer, and agricultural farm produce bags <= 50.0 kg"
+    ],
+    "exemptions": [
+      "Exempt from all Chapter II Retail Package Declarations (MRP, USP, Consumer Care, Month/Year of Mfg, Front PDP Font sizing Table-I)."
+    ],
+    "dependent_fields": [
+      "net_quantity",
+      "unit",
+      "commodity_category"
+    ],
+    "decision_logic": "if (commodity_category in ['cement', 'fertilizer', 'agricultural_farm_produce']): if (net_quantity_value > 50.0 and unit_symbol in ['kg', 'kilogram']): is_retail_rule_applicable = False; else: if (net_quantity_value > 25.0 and unit_symbol in ['kg', 'kilogram', 'L', 'litre']): is_retail_rule_applicable = False;",
+    "effective_from": "2018-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(xii)_0_1732871346.pdf",
+    "source_page": "9",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_INDUSTRIAL_INSTITUTIONAL_EXEMPTION",
+    "rule_reference": "Rule 3(c) & Rule 2(bb, bc)",
+    "package_category": "Industrial or Institutional Packages",
+    "conditions": [
+      "bought_directly_from_manufacturer == true || bought_directly_from_importer == true || bought_directly_from_wholesale_dealer == true",
+      "intended_for_use_by_industry_or_service_institution == true",
+      "package_bears_declaration_not_for_retail_sale == true"
+    ],
+    "exclusions": [
+      "packaged commodities sold through retail shops or retail dealers to individuals",
+      "institutional packages bought for commercial or trade purposes (redefined in G.S.R. 385(E))"
+    ],
+    "exemptions": [
+      "Complete exemption from LMPC Chapter II Retail Declarations (MRP, USP, Consumer Care, Standard sizing, Table-I PDP font metrics)."
+    ],
+    "dependent_fields": [
+      "distribution_channel",
+      "intended_use",
+      "declarations_on_package"
+    ],
+    "decision_logic": "if (distribution_channel in ['industrial_direct', 'institutional_direct'] and 'not for retail sale' in declarations_on_package): is_retail_rule_applicable = False;",
+    "effective_from": "2018-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(xii)_0_1732871346.pdf",
+    "source_page": "8-9",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_SMALL_PACK_GENERAL_EXEMPTION",
+    "rule_reference": "Rule 26(a)",
+    "package_category": "Small Packages (Weight or Volume)",
+    "conditions": [
+      "net_quantity_weight_or_measure <= 10.0 and unit in ['g', 'gram', 'ml', 'millilitre']",
+      "commodity_category not in ['tobacco', 'tobacco_products', 'pan_masala']"
+    ],
+    "exclusions": [
+      "packages of net quantity > 10.0 g or > 10.0 ml",
+      "tobacco and tobacco products (explicitly excluded w.e.f. 1-7-2016 by G.S.R. 385(E))",
+      "pan masala products (explicitly excluded w.e.f. 1-2-2026 by G.S.R. 881(E))"
+    ],
+    "exemptions": [
+      "Complete exemption from LMPC Chapter II retail package declarations."
+    ],
+    "dependent_fields": [
+      "net_quantity",
+      "unit",
+      "commodity_category"
+    ],
+    "decision_logic": "if (commodity_category not in ['tobacco', 'tobacco_products', 'pan_masala']): if (net_quantity_value <= 10.0 and unit_symbol in ['g', 'gram', 'ml', 'millilitre']): is_retail_rule_applicable = False;",
+    "effective_from": "2011-04-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf",
+    "source_page": "35",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_FAST_FOOD_EXEMPTION",
+    "rule_reference": "Rule 26(b)",
+    "package_category": "Restaurant and Hotel Packed Fast Food",
+    "conditions": [
+      "commodity_category == 'fast_food'",
+      "packer_type in ['restaurant', 'hotel', 'dhaba', 'eating_house']"
+    ],
+    "exclusions": [
+      "pre-packaged processed food manufactured/packed in standard food processing factories"
+    ],
+    "exemptions": [
+      "Complete exemption from LMPC Chapter II retail package declarations."
+    ],
+    "dependent_fields": [
+      "commodity_category",
+      "packer_type"
+    ],
+    "decision_logic": "if (packer_type in ['restaurant', 'hotel', 'fast_food_outlet'] and commodity_category == 'fast_food'): is_retail_rule_applicable = False;",
+    "effective_from": "2011-04-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "Book_on_Legal_Metrology_Packaged_Commodities_Rules,2011_with_all_amendments_whatsnews.pdf",
+    "source_page": "35",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_DRUGS_DPCO_EXEMPTION",
+    "rule_reference": "Rule 26(c)",
+    "package_category": "Scheduled and Non-Scheduled Drug Formulations",
+    "conditions": [
+      "commodity_category == 'drug_formulation'",
+      "is_covered_under_drugs_price_control_order == true",
+      "is_medical_device == false"
+    ],
+    "exclusions": [
+      "medical devices declared as drugs (explicitly excluded from DPCO exemption w.e.f. 1-1-2018 by G.S.R. 629(E))",
+      "general wellness cosmetics or dietary supplements"
+    ],
+    "exemptions": [
+      "Exemption from Chapter II retail rules for scheduled/non-scheduled formulations covered under DPCO 2013."
+    ],
+    "dependent_fields": [
+      "commodity_category",
+      "is_covered_under_dpco",
+      "is_medical_device"
+    ],
+    "decision_logic": "if (commodity_category == 'drug_formulation' and is_covered_under_dpco == True and is_medical_device == False): is_retail_rule_applicable = False;",
+    "effective_from": "2018-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/8(xii)_0_1732871346.pdf",
+    "source_page": "13",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_LOOSE_GARMENT_HOSIERY_RELAXATION",
+    "rule_reference": "Rule 26(f)",
+    "package_category": "Readymade Loose Garments or Hosiery sold open",
+    "conditions": [
+      "commodity_category in ['garment', 'hosiery']",
+      "packaging_state == 'loose_or_open_at_point_of_sale'",
+      "consumer_can_inspect_product_before_buying == true",
+      "product_stage == 'finished_product_alone'"
+    ],
+    "exclusions": [
+      "packaged readymade garments sold sealed in boxed packets or plastic wraps without direct inspection option",
+      "semi-finished raw textiles or industrial rolls"
+    ],
+    "exemptions": [
+      "Exempted from Month and Year of Manufacture (Rule 6(1)(d)), Net Quantity (Rule 6(1)(c)), and standard PDP font millimeter scales (Rule 7 Table-I). Required to display strictly 5 core declarations: (1) Name & complete address of manufacturer/marketer/brand owner/importer with Country of Origin, (2) Consumer care email & phone, (3) International sizes (S/M/L) with cm/m metric details, and (4) MRP."
+    ],
+    "dependent_fields": [
+      "commodity_category",
+      "packaging_state",
+      "product_stage"
+    ],
+    "decision_logic": "if (commodity_category in ['garment', 'hosiery'] and packaging_state == 'loose' and product_stage == 'finished'): apply_rules_list = ['MFR_NAME_ADDR_DECLARATION', 'COUNTRY_OF_ORIGIN_DECLARATION', 'CONSUMER_CARE_EMAIL_PHONE_DECLARATION', 'SIZE_METRIC_INDICATORS', 'MRP_DECLARATION']; is_mfg_date_required = False; is_net_quantity_required = False; is_table_1_font_height_required = False;",
+    "effective_from": "2023-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2022%203rd%20amendment%20in%20PCR%20Garments_1733228786.pdf",
+    "source_page": "2-3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_LOOSE_ECOMMERCE_ORDER_RELAXATION",
+    "rule_reference": "Rule 26(g)",
+    "package_category": "Loose Commodities Ordered Online",
+    "conditions": [
+      "is_ecommerce_order == true",
+      "packaging_state == 'loose_or_open'",
+      "consumer_aware_of_commodity_type_and_quantity == true"
+    ],
+    "exclusions": [
+      "standard pre-packaged commodities sold online in factory-sealed containers"
+    ],
+    "exemptions": [
+      "Exempted from packing/manufacture dates. The delivery box and digital page must display strictly: (1) Name/address/Country of Origin of manufacturer/marketer/brand owner/importer/seller, (2) Consumer Care details, (3) MRP, and (4) Net Quantity in metric units or numbers."
+    ],
+    "dependent_fields": [
+      "distribution_channel",
+      "packaging_state",
+      "consumer_awareness"
+    ],
+    "decision_logic": "if (distribution_channel == 'ecommerce' and packaging_state == 'loose' and consumer_awareness == True): apply_rules_list = ['NAME_ADDRESS_ORIGIN_SELLER_DECLARATION', 'CONSUMER_CARE_EMAIL_PHONE_DECLARATION', 'MRP_DECLARATION', 'NET_QUANTITY_DECLARATION']; is_mfg_date_required = False;",
+    "effective_from": "2024-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2023.10.6%20amendment%20in%20PCR_1732871982.pdf",
+    "source_page": "4-5",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_ELECTRONIC_PRODUCTS_QR_CODE_RELOCATION",
+    "rule_reference": "Rule 6 Provisos (QR Code)",
+    "package_category": "Electronic Products",
+    "conditions": [
+      "commodity_category == 'electronic_product'",
+      "manufacturer_elects_qr_code_declaration_relocation == true",
+      "package_itself_prints_name_mfr_packer_importer == true",
+      "package_itself_prints_consumer_care_telephone_and_email == true",
+      "package_itself_prints_explicit_qr_scan_instruction == true"
+    ],
+    "exclusions": [
+      "non-electronic general packages (food, toys, household chemicals)",
+      "electronic products not declaring details via QR code"
+    ],
+    "exemptions": [
+      "Permitted to declare manufacturer/packer/importer registered postal address, generic name of commodity, and product dimensions/size via scannable QR code instead of physical package surface text. Mandatory to print manufacturer/packer/importer name, consumer care telephone and email, and QR scan instruction physically on the package label."
+    ],
+    "dependent_fields": [
+      "commodity_category",
+      "qr_code_declared",
+      "declarations_on_surface"
+    ],
+    "decision_logic": "if (commodity_category == 'electronic_product' and qr_code_declared == True): allow_qr_relocation = ['manufacturer_address', 'common_generic_name', 'dimensions_size', 'consumer_care_other_info']; require_physically_printed_on_package = ['manufacturer_name', 'consumer_care_telephone', 'consumer_care_email', 'qr_scan_instruction_text'];",
+    "effective_from": "2023-06-23",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2023.6.23%20QR%20Code%20PCR%20amendment_1732871827.pdf",
+    "source_page": "2-3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_MEDICAL_DEVICES_STANDARDS_ALIGNMENT",
+    "rule_reference": "Rule 2(h) Proviso, Rule 7(2,3) provisos",
+    "package_category": "Medical Devices",
+    "conditions": [
+      "is_medical_device == true"
+    ],
+    "exclusions": [
+      "non-medical consumer health goods",
+      "cosmetics and general toiletries"
+    ],
+    "exemptions": [
+      "Bypasses standard LMPC Principal Display Panel Table-I numeral/letter heights and width metrics. Mandates that the declarations, character height, and character width specifications of the Medical Devices Rules, 2017 shall apply. Standard LMPC Rule 33 package relaxations shall not apply."
+    ],
+    "dependent_fields": [
+      "is_medical_device"
+    ],
+    "decision_logic": "if (is_medical_device == True): bypass_rules_list = ['LMPC_Table_I_font_heights', 'LMPC_letter_numeral_width_ratio', 'LMPC_Rule_33_relaxation']; apply_regulatory_code = 'Medical Devices Rules, 2017';",
+    "effective_from": "2025-10-23",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/267107_1761404707.pdf",
+    "source_page": "2-3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_USP_EXEMPTION_MRP_EQUALS_USP",
+    "rule_reference": "Rule 6(11) Second Proviso",
+    "package_category": "Standard Packages of Unit Metric Sizing",
+    "conditions": [
+      "declared_net_quantity == 1.0",
+      "unit in ['kg', 'kilogram', 'L', 'litre', 'm', 'metre', 'N', 'number', 'unit']"
+    ],
+    "exclusions": [
+      "packages of fractional net quantities (e.g. 450 g, 750 ml, 2.5 m)"
+    ],
+    "exemptions": [
+      "Declaration of Unit Sale Price (USP) is not required on the package or label because the Retail Sale Price (MRP) is mathematically equal to the Unit Sale Price."
+    ],
+    "dependent_fields": [
+      "net_quantity",
+      "unit"
+    ],
+    "decision_logic": "if (net_quantity_value == 1.0 and unit_symbol in ['kg', 'kilogram', 'L', 'litre', 'm', 'metre', 'N', 'number', 'unit', 'piece', 'U']): is_unit_sale_price_required = False;",
+    "effective_from": "2024-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/GSR226_1732871458.pdf",
+    "source_page": "3",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_USP_EXEMPTION_PROMOTIONAL_COMBINATIONS",
+    "rule_reference": "Rule 6(11) Third Proviso",
+    "package_category": "Combination, Group, and Multi-Piece Packages",
+    "conditions": [
+      "package_type in ['combination_package', 'group_package', 'multi_piece_package']"
+    ],
+    "exclusions": [
+      "single standard pre-packaged retail commodities"
+    ],
+    "exemptions": [
+      "Declaration of Unit Sale Price (USP) is not required on combination, group, or multi-piece promotional packages."
+    ],
+    "dependent_fields": [
+      "package_type"
+    ],
+    "decision_logic": "if (package_type in ['combination_package', 'group_package', 'multi_piece_package']): is_unit_sale_price_required = False;",
+    "effective_from": "2024-01-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2023.10.6%20amendment%20in%20PCR_1732871982.pdf",
+    "source_page": "4",
+    "status": "VERIFIED_CURRENT"
+  },
+  {
+    "applicability_rule_id": "APP_RULE_WARRANTY_SPARES_DATE_EXEMPTION",
+    "rule_reference": "Rule 6(1)(d) Proviso",
+    "package_category": "Warranty Servicing Spares & Accessories",
+    "conditions": [
+      "is_warranty_spare == true",
+      "is_sold_to_end_customer == false"
+    ],
+    "exclusions": [
+      "spare parts and accessories sold directly to retail consumers in open markets"
+    ],
+    "exemptions": [
+      "Completely exempted from the mandatory declaration of Month and Year of Manufacture."
+    ],
+    "dependent_fields": [
+      "is_warranty_spare",
+      "is_sold_to_end_customer"
+    ],
+    "decision_logic": "if (is_warranty_spare == True and is_sold_to_end_customer == False): is_manufacturing_date_required = False;",
+    "effective_from": "2024-04-01",
+    "effective_until": null,
+    "jurisdiction": "India",
+    "source_document": "https://consumeraffairs.gov.in/public/upload/files/2023.10.6%20amendment%20in%20PCR_1732871982.pdf",
+    "source_page": "4",
+    "status": "VERIFIED_CURRENT"
+  }
+]
