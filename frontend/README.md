@@ -1,167 +1,156 @@
-# maanak Frontend Architecture
+# Maanak Frontend — Legal Metrology Inspection & Enforcement Portal
 
-This frontend is the user-facing layer of the METROSCAN Legal Metrology inspection platform. It is built as a Vite + React + TypeScript application that presents inspection workflows, compliance review tools, case management, evidence handling, analytics, and enforcement dashboards.
+The frontend application for **Maanak**, an AI-powered Legal Metrology compliance inspection platform designed for enforcement officers, legal analysts, and regulatory authorities. It delivers a modern, high-performance web interface for package scanning, automated declaration review, statutory applicability analysis, font and PDP verification, case management, digital evidence logging, and e-commerce compliance tracking.
 
-The frontend is organized around a route-based shell and a set of feature pages. It uses a composable UI architecture where shared layout components, global providers, feature pages, hooks, data, and services sit behind a single React application root.
+---
 
-## 1. High-Level Architecture
+## 1. Overview & System Features
 
-The frontend runtime is intentionally simple:
+- **Executive & Enforcement Dashboards**: Real-time visualization of compliance metrics, inspection queues, risk distributions, violation trends, and officer performance.
+- **Multi-Stage Inspection Flow**:
+  - **New Inspection & Package Scan**: Multi-angle image capture (front, back, sides) with OCR processing and bounding-box overlay.
+  - **Compliance X-Ray**: Interactive visual inspection mapping detected text bounding boxes directly over package label images with instant compliance classification badges.
+  - **Declaration Workspace**: Side-by-side verification of mandatory declarations (MRP, Net Quantity, Batch, Mfg Date, Expiry, Manufacturer Address, Consumer Care, Country of Origin, Unit Sale Price). Allows manual correction and confidence scoring.
+  - **Statutory Applicability Engine**: Visualized decision tree evaluating applicable clauses under the Legal Metrology (Packaged Commodities) Rules, 2011, accounting for institutional exemptions (Rule 3(c)) and imported goods (Rule 6(1)(ma)).
+  - **Font & PDP Analysis**: Area calculation for the Principal Display Panel (PDP) and statutory minimum numeral/letter height compliance checking under Rule 9.
+  - **Human-in-the-Loop Verification**: Officer sign-off screen to confirm findings, attach notes, request rescans, or initiate enforcement notices.
+- **Case Management Vault**: End-to-end inspection lifecycle tracking with priority tags, status pipelines, search, and filtration.
+- **Digital Evidence Vault**: Cryptographically indexed, tamper-evident repository for high-resolution label photographs, barcode scans, and OCR audits.
+- **Legal Notice & Report Generator**: Automated generation of statutory notices (e.g., Section 39 / Rule 32 notices of non-compliance) and audit reports.
+- **E-Commerce & Market Intelligence**: Comparison of physical label declarations against e-commerce listings (Amazon, Flipkart, Blinkit) to identify digital listing discrepancies.
+- **Field Offline Mode & Sync**: Local state queue allowing field officers to conduct inspections in low-connectivity environments with automatic background synchronization.
 
-1. `main.tsx` mounts the React application.
-2. `App.tsx` creates the app shell by wrapping the router in application providers.
-3. `app/router/index.tsx` defines the route tree using `createBrowserRouter`.
-4. `layout/MainLayout` and `layout/AuthLayout` provide the different UI environments.
-5. Page components under `src/pages` represent the product’s user-facing business screens.
+---
 
-The architecture follows a classic feature-page layout:
+## 2. Technology Stack
 
-- Layout and navigation are reusable across pages.
-- Routes are declared centrally in the router.
-- Pages are lazy loaded for code splitting.
-- Providers decorate the UI with cross-cutting concerns such as toast messaging and case context.
-- Feature folders keep the UI organized by business domain such as cases, inspection, rules, intelligence, and evidence.
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Framework** | React 19 (`^19.2.8`) | Reactive user interface and component architecture |
+| **Language** | TypeScript (`~6.0.2`) | Static type safety across cases, rules, and UI state |
+| **Build Tool** | Vite 8 (`^8.2.2`) | Fast hot module replacement (HMR) and optimized build bundling |
+| **Routing** | React Router v7 (`^7.18.3`) | Declarative browser routing, nested routes, and lazy-loaded code splitting |
+| **Styling** | Tailwind CSS v4 (`^4.3.3`) | Utility-first CSS engine with dark slate aesthetic |
+| **Icons** | Lucide React (`^1.42.0`) | Consistent UI icon set |
+| **Class Utilities** | `clsx` & `tailwind-merge` | Dynamic and collision-free CSS class composition |
+| **Linter** | Oxlint (`^1.79.0`) | Blazing-fast JavaScript/TypeScript linting |
 
-## 2. Application Startup Flow
+---
 
-The startup flow is:
+## 3. Project Structure
 
-- `src/main.tsx` renders `<App />`
-- `src/App.tsx` uses `AppProviders` and `RouterProvider`
-- `src/app/providers/AppProviders.tsx` composes global providers
-- `src/app/router/index.tsx` builds the route tree and maps URLs to pages
+```
+frontend/
+├── index.html                 # Single-page application root HTML
+├── package.json               # Frontend dependencies, scripts, and build metadata
+├── vite.config.ts             # Vite configuration with React & Tailwind plugins
+├── tsconfig.json              # TypeScript root configuration
+├── public/                    # Static assets, logos, and mock images
+└── src/
+    ├── main.tsx               # App entry point (DOM root mounting)
+    ├── App.tsx                # App shell wrapping providers with router
+    ├── app/
+    │   ├── providers/         # Global React context providers
+    │   │   ├── AppProviders.tsx   # Provider composition tree
+    │   │   ├── CaseContext.tsx    # Active inspection case state & dispatch
+    │   │   └── ToastContext.tsx   # Global toast notifications
+    │   └── router/
+    │       └── index.tsx      # Centralized React Router configuration & route guards
+    ├── components/
+    │   ├── common/            # Reusable UI widgets (Sidebar, TopBar, StatusBadge, Toast, Modal)
+    │   └── views/             # Composite view scaffolding components
+    ├── data/
+    │   └── mockData.ts        # Comprehensive mock dataset for cases, rules, and metrics
+    ├── features/              # Modular domain feature components
+    │   ├── auth/              # Officer login & authentication components
+    │   ├── cases/             # Case management tables, filters, and cards
+    │   ├── compliance/        # Compliance checkcards, rule status lists
+    │   ├── dashboard/         # Metric cards, inspection queues, violation charts
+    │   ├── evidence/          # Media gallery, EXIF inspection, chain of custody
+    │   ├── inspection/        # Scanning UI, bounding box canvas, declaration forms
+    │   ├── intelligence/      # Heatmaps, e-commerce scrapers, manufacturer index
+    │   ├── offline/           # Offline queue manager & sync indicators
+    │   ├── reports/           # Notice generators, report preview, export tools
+    │   └── settings/          # System configuration, officer profile, ruleset toggles
+    ├── hooks/                 # Custom reusable hooks (shortcuts, case actions, toasts)
+    ├── layouts/               # Shell layouts (`MainLayout`, `AuthLayout`)
+    ├── pages/                 # Lazy-loaded route boundary pages
+    │   ├── auth/
+    │   ├── cases/
+    │   ├── dashboard/
+    │   ├── evidence/
+    │   ├── inspection/
+    │   ├── intelligence/
+    │   ├── reports/
+    │   ├── rules/
+    │   ├── offline/
+    │   └── settings/
+    ├── services/              # API clients & data services (`caseService.ts`, `syncService.ts`)
+    └── types/                 # Shared TypeScript interface definitions
+```
 
-This separation is useful because it keeps routing, context, and layout concerns independent. If you want to add a new product screen, the main work is usually:
+---
 
-1. Add a new lazy page import in the router.
-2. Add a route entry with the page element.
-3. Build the page under `src/pages/...`.
-4. Reuse existing layout, data, types, and shared UI components if possible.
+## 4. Route Map
 
-## 3. Routing Model
+| Route Path | Page Component | Purpose |
+| :--- | :--- | :--- |
+| `/` | `DashboardPage` | Executive compliance metrics and active case feed |
+| `/login` | `LoginPage` | Enforcement officer login and authentication |
+| `/inspection/new` | `NewInspectionPage` | Initiate fresh commodity inspection session |
+| `/inspection/scan` | `ScanPackagePage` | Multi-side image capture and label upload |
+| `/inspection/xray` | `ComplianceXRayPage` | Bounding box visualizer on label imagery |
+| `/inspection/declarations` | `DeclarationWorkspacePage` | OCR extraction comparison & field verification |
+| `/inspection/applicability` | `ApplicabilityEnginePage` | Rule applicability matrix & exemption evaluation |
+| `/inspection/font-pdp` | `FontPdpAnalysisPage` | PDP dimensions & font height compliance tool |
+| `/inspection/verify` | `HumanVerificationPage` | Final officer review and enforcement decision |
+| `/cases` | `CasesPage` | Comprehensive inspection case ledger |
+| `/evidence` | `EvidenceVaultPage` | Digital evidence repository & audit trails |
+| `/reports` | `ReportsPage` | Inspection certificates & statutory notices |
+| `/intelligence` | `AnalyticsPage` | Compliance trend analytics and forecasting |
+| `/intelligence/ecommerce`| `EcommerceComparisonPage` | Physical vs. e-commerce listing verification |
+| `/intelligence/heatmaps` | `HeatmapPage` | Geographic violation concentration maps |
+| `/rules` | `RuleLibraryPage` | Legal Metrology rulebook explorer & clauses |
+| `/offline` | `OfflineQueuePage` | Pending field scans awaiting network sync |
+| `/settings` | `SettingsPage` | User preferences, API config, and system rules |
 
-The router in `src/app/router/index.tsx` is a nested browser router with two top-level areas:
+---
 
-- `/` and the authenticated application area using `MainLayout`
-- `/login` using `AuthLayout`
+## 5. Development & Build Setup
 
-The main flow is organized around the product workflow:
+### Prerequisites
+- Node.js (v18.0.0 or higher)
+- npm or yarn
 
-- Dashboard
-- Inspection workflow pages
-- Declaration workspace
-- Applicability engine
-- Font and PDP analysis
-- Human verification
-- Evidence vault
-- Reports
-- Cases and compliance intelligence
-- Rule library
-- Offline mode
-- Settings
-
-Routes are declared in a centralized array using `createBrowserRouter`. Because the router uses lazy loading for page modules, the app can split the UI into smaller bundles as the user navigates.
-
-## 4. Provider and State Architecture
-
-The global providers are defined in `src/app/providers/`:
-
-- `AppProviders.tsx` composes the application providers
-- `CaseContext.tsx` holds application case or inspection context
-- `ToastContext.tsx` provides cross-component toast feedback
-
-These providers wrap the routing tree so that the UI can expose contextual state without threading props through every screen. This is the correct place for cross-cutting, application-wide state that must be visible across many pages.
-
-## 5. UI Layer Composition
-
-The frontend uses a layered UI structure:
-
-- `src/layouts/` contains the top-level page wrappers for the main app and Auth screens.
-- `src/components/common/` contains reusable navigation and UI widgets such as the sidebar, top bar, modal search, shortcuts, status badge, and toast system.
-- `src/components/views/` contains the classic view components that are used by the feature pages or screens.
-- `src/pages/` is the route-oriented page layer.
-
-This preserves separation of responsibilities:
-
-- `components/common` defines infrastructure UI.
-- `components/views` or scaffolder screens expose page content.
-- `pages` act as the route boundary and orchestration layer.
-
-## 6. Feature Domain Organization
-
-The codebase is grouped by business and product domain rather than a single flat screen file layout.
-
-Important folders:
-
-- `src/features/auth/` → login and authentication concepts
-- `src/features/cases/` → case management and inspection case workflows
-- `src/features/compliance/` → compliance and rule evaluation UI
-- `src/features/dashboard/` → dashboard and executive metrics
-- `src/features/evidence/` → evidence vault and digital evidence concepts
-- `src/features/inspection/` → scanning, compliance X-Ray, declaration, and inspection verification
-- `src/features/intelligence/` → analytics, heatmaps, ecommerce comparison, and manufacturer intelligence
-- `src/features/offline/` → offline queue and field sync pattern support
-- `src/features/reports/` → report and notice generation concepts
-- `src/features/settings/` → user and admin settings
-
-The `src/hooks/` folder contains reusable custom hooks such as route navigation, keyboard shortcuts, inspection case handling, and toasts.
-
-## 7. Data and Type Model
-
-The frontend uses TypeScript types and mock data to model the UI.
-
-- `src/types/` defines cross-cutting domain shapes and route-related types.
-- `src/data/mockData.ts` provides sample data used for UI development and product demonstration.
-- `src/services/` is where the frontend can interact with API or backend integration services.
-
-This means the frontend is ready to separate view rendering from backend data handling. The current repository uses mock/data-driven screens while keeping a clean place to add real API adapters.
-
-## 8. Styling and Design System
-
-The frontend styling layer is intentionally light and modern:
-
-- Vite is the build and development server.
-- TypeScript performs compile-time safety.
-- React Router v7 handles route navigation.
-- `clsx` and `tailwind-merge` support safe conditional UI classes.
-- `lucide-react` supplies icons.
-- `Tailwind CSS` provides utility style primitives.
-
-The UI follows a slate/dark-navigation product style with green, red, and amber compliance indicators across the application. The architecture does not enforce strict design tokens yet, but the styling intent is consistent throughout the UI.
-
-## 9. Workflow Summary
-
-A typical product workflow will look like this:
-
-1. An officer opens the application and lands on the dashboard or login view.
-2. The officer begins a new inspection from the route `/inspection/new`.
-3. The package scan and compliance inspection screens are used to capture labels and evidence.
-4. The review tools such as declaration workspace, ruling engine, font and PDP checks, and ecommerce comparison validate declarations.
-5. Findings are routed into cases, evidence, reports, and analytics pages.
-6. The enforcement dashboard and rule library provide governance, auditability, and reporting output.
-
-## 10. Development Commands
-
-From the frontend directory:
+### Available Scripts
 
 ```bash
+# Navigate to the frontend directory
+cd Maanak/frontend
+
+# Install dependencies
 npm install
+
+# Start local development server with HMR (typically at http://localhost:5173)
 npm run dev
+
+# Compile TypeScript and build for production
 npm run build
+
+# Run linter checks
 npm run lint
+
+# Preview the production build locally
 npm run preview
 ```
 
-## 11. Architectural Principles
+---
 
-The frontend is designed according to a few clear principles:
+## 6. Backend Integration
 
-- Centralize route and UI composition.
-- Use page-level lazy loading for scalable routing.
-- Keep reusable UI in common components.
-- Use providers for cross-cutting state.
-- Group related screens by domain logic and workflow stage.
-- Keep types and mock data explicit to support future backend integration.
-
-That combination gives the UI a strong product structure while keeping expansion easy as the METROSCAN platform grows.
-
+The frontend communicates with the **Maanak Backend** (running by default at `http://localhost:3000`).
+The communication endpoints include:
+- `POST /ocr`: Ingest label photos for OCR parsing and bounding box extraction.
+- `POST /rules/evaluate`: Evaluate declaration payloads against statutory rules.
+- `POST /applicability/evaluate`: Query dynamic statutory clauses and exemptions.
+- `GET/POST/PUT /cases`: Synchronize inspection records and officer determinations.

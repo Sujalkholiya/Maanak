@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles,
   Sliders,
@@ -14,6 +14,7 @@ import {
 import { InspectionCase } from '../../../types';
 import { DemoBadge } from '../../../components/common/DemoBadge';
 import { StatusBadge } from '../../../components/common/StatusBadge';
+import { complianceService, EvaluatePdpResponse } from '../../../services/complianceService';
 
 interface FontPdpAnalysisViewProps {
   currentCase: InspectionCase;
@@ -25,6 +26,34 @@ export const FontPdpAnalysisView: React.FC<FontPdpAnalysisViewProps> = ({
   onProceedToReview,
 }) => {
   const [selectedCharacter, setSelectedCharacter] = useState<'NET_QTY' | 'MRP' | 'MFR'>('NET_QTY');
+  const [pdpResult, setPdpResult] = useState<EvaluatePdpResponse | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const runPdp = async () => {
+      try {
+        const res = await complianceService.evaluatePdp({
+          packageShape: 'rectangular',
+          heightCm: 26.0,
+          widthCm: 16.0,
+          measuredDeclarations: [
+            { declarationKey: 'NET_QTY', label: 'Net Quantity', measuredHeightMm: 2.4 },
+            { declarationKey: 'MRP', label: 'MRP Numeral', measuredHeightMm: 3.2 },
+            { declarationKey: 'MFR', label: 'Manufacturer Details', measuredHeightMm: 1.8 },
+          ],
+        });
+        if (isMounted && res && res.success) {
+          setPdpResult(res);
+        }
+      } catch (err) {
+        console.warn('Live PDP evaluation fallback:', err);
+      }
+    };
+    runPdp();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">

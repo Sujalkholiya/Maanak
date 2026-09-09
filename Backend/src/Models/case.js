@@ -10,7 +10,7 @@ const caseSchema = new mongoose.Schema(
 
         productName: {
             type: String,
-            required: true
+            default: "Packaged Commodity"
         },
 
         batchNo: {
@@ -40,12 +40,6 @@ const caseSchema = new mongoose.Schema(
 
         caseStatus: {
             type: String,
-            enum: [
-                "PENDING",
-                "IN_PROGRESS",
-                "UNDER_REVIEW",
-                "COMPLETED"
-            ],
             default: "PENDING"
         },
 

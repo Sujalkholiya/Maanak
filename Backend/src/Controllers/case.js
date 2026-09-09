@@ -174,15 +174,25 @@ const getCases = async (req, res) => {
             console.warn("MongoDB query failed, serving fallback cases:", dbErr.message);
         }
 
-        if (!cases || cases.length === 0) {
-            return res.status(200).json(FALLBACK_CASES.map(sanitizeCase));
-        }
-
-        const sanitized = cases.map(sanitizeCase);
-        res.status(200).json(sanitized);
+        const sourceList = (cases && cases.length > 0) ? cases : FALLBACK_CASES;
+        const sanitized = sourceList.map(sanitizeCase);
+        
+        // Return both array and object-compatible response
+        res.status(200).json({
+            success: true,
+            count: sanitized.length,
+            cases: sanitized,
+            data: sanitized
+        });
     } catch (error) {
         console.warn("getCases fallback:", error.message);
-        res.status(200).json(FALLBACK_CASES.map(sanitizeCase));
+        const fallback = FALLBACK_CASES.map(sanitizeCase);
+        res.status(200).json({
+            success: true,
+            count: fallback.length,
+            cases: fallback,
+            data: fallback
+        });
     }
 };
 
@@ -202,10 +212,20 @@ const getCaseById = async (req, res) => {
             caseData = FALLBACK_CASES[0];
         }
 
-        res.status(200).json(sanitizeCase(caseData));
+        const sanitized = sanitizeCase(caseData);
+        res.status(200).json({
+            success: true,
+            case: sanitized,
+            ...sanitized
+        });
     } catch (error) {
         console.warn("getCaseById fallback:", error.message);
-        res.status(200).json(sanitizeCase(FALLBACK_CASES[0]));
+        const sanitized = sanitizeCase(FALLBACK_CASES[0]);
+        res.status(200).json({
+            success: true,
+            case: sanitized,
+            ...sanitized
+        });
     }
 };
 
@@ -214,13 +234,36 @@ const createCase = async (req, res) => {
     try {
         const payload = { ...req.body };
         if (!payload.caseId) {
-            payload.caseId = `CASE-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+            payload.caseId = payload.id || `CASE-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+        if (!payload.productName) {
+            payload.productName = payload.product?.name || payload.commodity || "Packaged Food Sample";
+        }
+        if (!payload.brand && payload.product?.brand) {
+            payload.brand = payload.product.brand;
+        }
+        if (!payload.category && payload.product?.category) {
+            payload.category = payload.product.category;
+        }
+        if (!payload.batchNo && payload.product?.batchNo) {
+            payload.batchNo = payload.product.batchNo;
+        }
+        if (!payload.caseStatus && payload.workflowStatus) {
+            payload.caseStatus = payload.workflowStatus;
+        }
+        if (!payload.overallStatus && payload.complianceStatus) {
+            payload.overallStatus = payload.complianceStatus;
         }
         if (!payload.createdDate) {
             payload.createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19) + " IST";
         }
         const newCase = await Case.create(payload);
-        res.status(201).json(sanitizeCase(newCase));
+        const sanitized = sanitizeCase(newCase);
+        res.status(201).json({
+            success: true,
+            case: sanitized,
+            ...sanitized
+        });
     } catch (error) {
         console.error("createCase error:", error);
         res.status(400).json({
@@ -249,7 +292,12 @@ const updateCase = async (req, res) => {
             }
         );
 
-        res.status(200).json(sanitizeCase(updatedCase));
+        const sanitized = sanitizeCase(updatedCase);
+        res.status(200).json({
+            success: true,
+            case: sanitized,
+            ...sanitized
+        });
     } catch (error) {
         console.error("updateCase error:", error);
         res.status(400).json({
@@ -303,7 +351,12 @@ const updateInspection = async (req, res) => {
             { new: true, runValidators: true }
         );
 
-        res.status(200).json(sanitizeCase(updated));
+        const sanitized = sanitizeCase(updated);
+        res.status(200).json({
+            success: true,
+            case: sanitized,
+            ...sanitized
+        });
     } catch (error) {
         console.error("updateInspection error:", error);
         res.status(500).json({
@@ -345,7 +398,12 @@ const updateVerification = async (req, res) => {
             { new: true, runValidators: true }
         );
 
-        res.status(200).json(sanitizeCase(updated));
+        const sanitized = sanitizeCase(updated);
+        res.status(200).json({
+            success: true,
+            case: sanitized,
+            ...sanitized
+        });
     } catch (error) {
         console.error("updateVerification error:", error);
         res.status(500).json({

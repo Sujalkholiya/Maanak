@@ -12,10 +12,11 @@ import {
   Clock,
   Plus,
 } from 'lucide-react';
-import { DEMO_CASES } from '../../../data/mockData';
 import { InspectionCase, PriorityLevel } from '../../../types';
 import { StatusBadge } from '../../../components/common/StatusBadge';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { RefreshCw, Loader2 } from 'lucide-react';
 
 interface CaseManagementViewProps {
   onSelectCase: (caseId: string) => void;
@@ -26,11 +27,12 @@ export const CaseManagementView: React.FC<CaseManagementViewProps> = ({
   onSelectCase,
   onNewInspection,
 }) => {
+  const { allCases, refreshCases, isLoading } = useInspectionCase();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [priorityFilter, setPriorityFilter] = useState('ALL');
 
-  const filteredCases = DEMO_CASES.filter((c) => {
+  const filteredCases = (allCases || []).filter((c) => {
     const matchesSearch =
       c.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,13 +67,28 @@ export const CaseManagementView: React.FC<CaseManagementViewProps> = ({
           </p>
         </div>
 
-        <button
-          onClick={onNewInspection}
-          className="px-4 py-2.5 bg-[#22C2C2] hover:bg-[#1EB0B0] text-[#0F1F1E] rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          Initiate New Case
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => refreshCases()}
+            disabled={isLoading}
+            className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-200 transition-colors cursor-pointer"
+            title="Reload cases from backend"
+          >
+            {isLoading ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0E8A8A]" />
+            ) : (
+              <RefreshCw className="w-3.5 h-3.5 text-slate-600" />
+            )}
+            <span>Refresh</span>
+          </button>
+          <button
+            onClick={onNewInspection}
+            className="px-4 py-2.5 bg-[#22C2C2] hover:bg-[#1EB0B0] text-[#0F1F1E] rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            Initiate New Case
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}

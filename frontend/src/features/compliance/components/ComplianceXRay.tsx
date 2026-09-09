@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Crosshair,
   ZoomIn,
@@ -14,9 +14,12 @@ import {
   FileText,
   Shield,
   ArrowRight,
+  Loader2,
 } from 'lucide-react';
 import { BoundingBox, InspectionCase } from '../../../types';
 import { StatusBadge } from '../../../components/common/StatusBadge';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { complianceService } from '../../../services/complianceService';
 
 interface ComplianceXRayProps {
   currentCase: InspectionCase;
@@ -31,6 +34,8 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
   onProceedToReview,
   onSelectSampleCase,
 }) => {
+  const { updateCurrentCase } = useInspectionCase();
+  const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
   const [selectedBoxId, setSelectedBoxId] = useState<string>(
     currentCase.boundingBoxes.find((b) => b.status !== 'COMPLIANT')?.id ||
       currentCase.boundingBoxes[0]?.id ||
@@ -40,6 +45,40 @@ export const ComplianceXRay: React.FC<ComplianceXRayProps> = ({
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [showRuler, setShowRuler] = useState<boolean>(true);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const runEvaluation = async () => {
+      try {
+        setIsEvaluating(true);
+        const res = await complianceService.evaluateRules({
+          category: currentCase.category,
+          declarations: currentCase.declarations,
+          applicability: currentCase.applicability,
+        });
+        if (isMounted && res && res.ruleEvaluations && res.ruleEvaluations.length > 0) {
+          updateCurrentCase({
+            rules: res.ruleEvaluations,
+            overallStatus: res.overallStatus,
+            findingsCount: {
+              compliant: res.summary.compliant,
+              potentialNonCompliance: res.summary.potentialNonCompliance,
+              needsVerification: res.summary.needsHumanVerification,
+            },
+          });
+        }
+      } catch (err) {
+        console.warn('Live rule evaluation fallback:', err);
+      } finally {
+        if (isMounted) setIsEvaluating(false);
+      }
+    };
+
+    runEvaluation();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentCase.id, currentCase.declarations, currentCase.applicability]);
 
   const selectedBox = currentCase.boundingBoxes.find((b) => b.id === selectedBoxId);
 

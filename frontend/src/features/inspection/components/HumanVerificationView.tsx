@@ -12,6 +12,9 @@ import {
 import { InspectionCase } from '../../../types';
 import { StatusBadge } from '../../../components/common/StatusBadge';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { useToast } from '../../../hooks/useToast';
+import { caseService } from '../../../services/caseService';
 
 interface HumanVerificationViewProps {
   currentCase: InspectionCase;
@@ -22,11 +25,45 @@ export const HumanVerificationView: React.FC<HumanVerificationViewProps> = ({
   currentCase,
   onProceedToReport,
 }) => {
+  const { updateCurrentCase, persistCurrentCase } = useInspectionCase();
+  const { showToast } = useToast();
   const [selectedIssueIndex, setSelectedIssueIndex] = useState<number>(0);
   const [officerNote, setOfficerNote] = useState<string>(
+    currentCase.officerNotes ||
     'Inspected physical sample at New Delhi container depot. Adhesive sticker elevated price from ₹360 to ₹420 without requisite gazette endorsement. Recommended issuance of statutory notice under Section 18.'
   );
-  const [decisionState, setDecisionState] = useState<'IDLE' | 'CONFIRMED' | 'REJECTED' | 'RESCAN'>('IDLE');
+  const [decisionState, setDecisionState] = useState<'IDLE' | 'CONFIRMED' | 'REJECTED' | 'RESCAN'>(
+    (currentCase.officerDecision === 'RESCAN_REQUESTED' ? 'RESCAN' : currentCase.officerDecision) as any || 'IDLE'
+  );
+
+  const handleDecision = async (decision: 'CONFIRMED' | 'REJECTED' | 'RESCAN') => {
+    setDecisionState(decision);
+    const backendDecision = decision === 'RESCAN' ? 'RESCAN_REQUESTED' : decision;
+    updateCurrentCase({
+      officerDecision: backendDecision as any,
+      officerNotes: officerNote,
+      caseStatus: decision === 'CONFIRMED' ? 'Verified' : decision === 'REJECTED' ? 'Rejected' : 'Needs Review',
+    });
+    try {
+      await caseService.updateVerification(currentCase.id, backendDecision as any, officerNote);
+      showToast('Decision Recorded', `Officer decision ${decision} successfully saved into case ledger.`, 'success');
+    } catch (e) {
+      console.warn('Backend decision update fallback:', e);
+    }
+  };
+
+  const handleProceed = async () => {
+    const backendDecision = decisionState === 'RESCAN' ? 'RESCAN_REQUESTED' : decisionState === 'IDLE' ? 'CONFIRMED' : decisionState;
+    try {
+      await persistCurrentCase({
+        officerDecision: backendDecision as any,
+        officerNotes: officerNote,
+      });
+    } catch (e) {
+      console.warn('Persist current case error:', e);
+    }
+    onProceedToReport();
+  };
 
   const issues = currentCase.rules.filter((r) => r.status !== 'COMPLIANT');
   const activeIssue = issues[selectedIssueIndex] || currentCase.rules[0];
@@ -55,7 +92,7 @@ export const HumanVerificationView: React.FC<HumanVerificationViewProps> = ({
         </div>
 
         <button
-          onClick={onProceedToReport}
+          onClick={handleProceed}
           className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
         >
           <span>Proceed to Legal Notice</span>
@@ -233,7 +270,7 @@ export const HumanVerificationView: React.FC<HumanVerificationViewProps> = ({
 
             <div className="grid grid-cols-3 gap-2 text-xs font-bold">
               <button
-                onClick={() => setDecisionState('CONFIRMED')}
+                onClick={() => handleDecision('CONFIRMED')}
                 className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   decisionState === 'CONFIRMED'
                     ? 'bg-emerald-700 text-white shadow-xs'
@@ -245,7 +282,7 @@ export const HumanVerificationView: React.FC<HumanVerificationViewProps> = ({
               </button>
 
               <button
-                onClick={() => setDecisionState('REJECTED')}
+                onClick={() => handleDecision('REJECTED')}
                 className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   decisionState === 'REJECTED'
                     ? 'bg-rose-700 text-white shadow-xs'
@@ -257,7 +294,7 @@ export const HumanVerificationView: React.FC<HumanVerificationViewProps> = ({
               </button>
 
               <button
-                onClick={() => setDecisionState('RESCAN')}
+                onClick={() => handleDecision('RESCAN')}
                 className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   decisionState === 'RESCAN'
                     ? 'bg-slate-800 text-white shadow-xs'

@@ -6,7 +6,7 @@ import {
   ArrowRight,
   FolderOpen,
 } from 'lucide-react';
-import { DEMO_CASES } from '../../../data/mockData';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
 import { ProductIntakeForm } from '../../inspection/components/ProductIntakeForm';
 
 interface DashboardViewProps {
@@ -23,6 +23,14 @@ interface DashboardViewProps {
 export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigate,
 }) => {
+  const { allCases } = useInspectionCase();
+  const totalCases = allCases?.length || 0;
+  const pendingReview = (allCases || []).filter(
+    (c) => c.caseStatus === 'Needs Review' || c.overallStatus === 'NEEDS_HUMAN_VERIFICATION'
+  ).length;
+  const flaggedCases = (allCases || []).filter((c) => c.overallStatus === 'POTENTIAL_NON_COMPLIANCE').length;
+  const flaggedRate = totalCases > 0 ? ((flaggedCases / totalCases) * 100).toFixed(1) + '%' : '0.0%';
+  const adherenceRate = totalCases > 0 ? (((totalCases - flaggedCases) / totalCases) * 100).toFixed(1) + '%' : '100.0%';
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-16">
       {/* ============================================================ */}
@@ -59,7 +67,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="my-3">
             <div className="text-3xl sm:text-4xl font-black text-[#111413] font-mono tracking-tight group-hover:text-[#0E8A8A] transition-colors">
-              {DEMO_CASES.length}
+              {totalCases}
             </div>
             <div className="text-xs font-semibold text-[#0E8A8A] mt-1 flex items-center gap-1">
               <span>View full register</span>
@@ -88,7 +96,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="my-3">
             <div className="text-3xl sm:text-4xl font-black text-[#C98A2C] font-mono tracking-tight group-hover:scale-105 transition-transform origin-left">
-              3
+              {pendingReview}
             </div>
             <div className="text-xs font-semibold text-[#0E8A8A] mt-1 flex items-center gap-1">
               <span>Review docket items</span>
@@ -116,7 +124,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="my-3">
             <div className="text-3xl sm:text-4xl font-black text-[#C1443A] font-mono tracking-tight group-hover:scale-105 transition-transform origin-left">
-              30.2%
+              {flaggedRate}
             </div>
             <div className="text-xs font-semibold text-[#0E8A8A] mt-1 flex items-center gap-1">
               <span>Inspect flagged items</span>
@@ -124,7 +132,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-[11px] text-[#727A78]">
-            Compared to 34.1% last circle
+            {flaggedCases} of {totalCases} cases flagged
           </div>
         </div>
 
@@ -144,7 +152,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="my-3">
             <div className="text-3xl sm:text-4xl font-black text-[#2F7D5F] font-mono tracking-tight group-hover:text-[#27664E] transition-colors">
-              69.8%
+              {adherenceRate}
             </div>
             <div className="text-xs font-semibold text-[#0E8A8A] mt-1 flex items-center gap-1">
               <span>Explore rule benchmarks</span>
@@ -152,7 +160,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-[11px] text-[#2F7D5F] font-medium">
-            1,384 statutory checks passed
+            Based on active case determinations
           </div>
         </div>
       </div>

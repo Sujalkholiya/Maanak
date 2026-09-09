@@ -12,6 +12,9 @@ import {
 } from 'lucide-react';
 import { InspectionCase } from '../../../types';
 import { useToast } from '../../../hooks/useToast';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { ocrService } from '../../../services/ocrService';
+import { Loader2 } from 'lucide-react';
 
 interface CaptureScreenProps {
   currentCase: InspectionCase;
@@ -28,6 +31,7 @@ interface PhotoItem {
   scaleCalibrated: boolean;
   pixelScale: string;
   timestamp: string;
+  file?: File;
 }
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
@@ -38,6 +42,8 @@ export const CaptureScreen: React.FC<CaptureScreenProps> = ({
   onSelectSampleCase,
 }) => {
   const { showToast } = useToast();
+  const { updateCurrentCase } = useInspectionCase();
+  const [isScanning, setIsScanning] = useState<boolean>(false);
 
   const [photos, setPhotos] = useState<PhotoItem[]>([
     {
@@ -88,6 +94,7 @@ export const CaptureScreen: React.FC<CaptureScreenProps> = ({
         scaleCalibrated: true,
         pixelScale: '14.8 px/mm',
         timestamp: new Date().toLocaleTimeString('en-IN', { hour12: false }) + ' IST',
+        file,
       });
     });
 
@@ -108,6 +115,35 @@ export const CaptureScreen: React.FC<CaptureScreenProps> = ({
 
     // Reset input so re-selecting identical filename works
     e.target.value = '';
+  };
+
+  const handleProceedWithOcr = async () => {
+    const photoWithFile = photos.find((p) => p.file);
+    if (photoWithFile && photoWithFile.file) {
+      try {
+        setIsScanning(true);
+        showToast('Extracting Declarations', 'Processing label imagery via Tesseract OCR engine...', 'info');
+        const ocrRes = await ocrService.runOcr(photoWithFile.file);
+
+        if (ocrRes && ocrRes.success) {
+          updateCurrentCase({
+            image: photoWithFile.url,
+            productName: ocrRes.extractedData?.productName || currentCase.productName,
+            batchNo: ocrRes.extractedData?.batchNo || currentCase.batchNo,
+            manufacturer: ocrRes.extractedData?.manufacturer || currentCase.manufacturer,
+            declarations: ocrRes.declarations && ocrRes.declarations.length > 0 ? ocrRes.declarations : currentCase.declarations,
+            boundingBoxes: ocrRes.boundingBoxes && ocrRes.boundingBoxes.length > 0 ? ocrRes.boundingBoxes : currentCase.boundingBoxes,
+          });
+          showToast('OCR Analysis Complete', `Extracted ${ocrRes.declarations?.length || 0} statutory declarations.`, 'success');
+        }
+      } catch (err: any) {
+        console.warn('OCR processing error:', err);
+        showToast('OCR Warning', 'Live OCR analysis experienced an issue. Proceeding with captured photo.', 'warning');
+      } finally {
+        setIsScanning(false);
+      }
+    }
+    onProceedToAnalysis();
   };
 
   const handleRemovePhoto = (photoId: string) => {
@@ -299,13 +335,22 @@ export const CaptureScreen: React.FC<CaptureScreenProps> = ({
         </div>
 
         <button
-          onClick={onProceedToAnalysis}
-          disabled={photos.length === 0}
+          onClick={handleProceedWithOcr}
+          disabled={photos.length === 0 || isScanning}
           className="inline-flex items-center justify-center gap-2 bg-[#22C2C2] hover:bg-[#1EB0B0] active:bg-[#18A0A0] disabled:opacity-40 disabled:pointer-events-none text-[#0F1F1E] text-xs sm:text-sm font-bold px-6 py-3 rounded-xl shadow-xs transition-all active:scale-[0.98] cursor-pointer"
           title="Proceed to Compliance X-Ray"
         >
-          <span>Proceed to Compliance X-Ray</span>
-          <ArrowRight className="w-4 h-4 text-[#0F1F1E]" />
+          {isScanning ? (
+            <>
+              <Loader2 className="w-4 h-4 text-[#0F1F1E] animate-spin" />
+              <span>Analyzing Label (OCR Engine)...</span>
+            </>
+          ) : (
+            <>
+              <span>Proceed to Compliance X-Ray</span>
+              <ArrowRight className="w-4 h-4 text-[#0F1F1E]" />
+            </>
+          )}
         </button>
       </div>
 

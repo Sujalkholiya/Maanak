@@ -15,6 +15,8 @@ import {
 import { ExtractedDeclaration, InspectionCase } from '../../../types';
 import { StatusBadge } from '../../../components/common/StatusBadge';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { useToast } from '../../../hooks/useToast';
 
 interface DeclarationWorkspaceProps {
   currentCase: InspectionCase;
@@ -27,6 +29,8 @@ export const DeclarationWorkspace: React.FC<DeclarationWorkspaceProps> = ({
   onProceedToApplicability,
   onOpenXRay,
 }) => {
+  const { updateCurrentCase } = useInspectionCase();
+  const { showToast } = useToast();
   const [declarations, setDeclarations] = useState<ExtractedDeclaration[]>(
     currentCase.declarations
   );
@@ -41,14 +45,20 @@ export const DeclarationWorkspace: React.FC<DeclarationWorkspaceProps> = ({
   };
 
   const handleSaveEdit = (fieldId: string) => {
-    setDeclarations((prev) =>
-      prev.map((d) =>
-        d.fieldId === fieldId
-          ? { ...d, detectedValue: editValue, manualOverride: editValue }
-          : d
-      )
+    const updated = declarations.map((d) =>
+      d.fieldId === fieldId
+        ? { ...d, detectedValue: editValue, manualOverride: editValue, status: 'COMPLIANT' as const }
+        : d
     );
+    setDeclarations(updated);
+    updateCurrentCase({ declarations: updated });
     setEditingFieldId(null);
+    showToast('Declaration Updated', `Field ${fieldId} updated with manual verification.`, 'success');
+  };
+
+  const handleProceed = () => {
+    updateCurrentCase({ declarations });
+    onProceedToApplicability();
   };
 
   const filteredDeclarations = declarations.filter((d) => {
@@ -86,7 +96,7 @@ export const DeclarationWorkspace: React.FC<DeclarationWorkspaceProps> = ({
             <span>Interactive X-Ray</span>
           </button>
           <button
-            onClick={onProceedToApplicability}
+            onClick={handleProceed}
             className="px-4 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
           >
             <span>Proceed to Applicability</span>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Scale,
   ChevronDown,
@@ -6,9 +6,12 @@ import {
   Shield,
   ArrowRight,
   SlidersHorizontal,
+  RefreshCw,
 } from 'lucide-react';
 import { InspectionCase } from '../../../types';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { useInspectionCase } from '../../../hooks/useInspectionCase';
+import { complianceService } from '../../../services/complianceService';
 
 interface ApplicabilityEngineViewProps {
   currentCase: InspectionCase;
@@ -19,8 +22,10 @@ export const ApplicabilityEngineView: React.FC<ApplicabilityEngineViewProps> = (
   currentCase,
   onProceedToRuleValidation,
 }) => {
+  const { updateCurrentCase } = useInspectionCase();
   // Collapsed by default as per design requirement
   const [showRationale, setShowRationale] = useState<boolean>(false);
+  const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
   const [commodityOverride] = useState<string>(
     currentCase.applicability.commodity
   );
@@ -32,6 +37,39 @@ export const ApplicabilityEngineView: React.FC<ApplicabilityEngineViewProps> = (
   );
 
   const applicability = currentCase.applicability;
+
+  const triggerEvaluation = async (inst: boolean, imp: boolean) => {
+    try {
+      setIsEvaluating(true);
+      const res = await complianceService.evaluateApplicability({
+        productName: currentCase.productName,
+        category: currentCase.category,
+        packageType: currentCase.applicability?.packageType || 'Retail Pre-Packaged Pouch',
+        isInstitutional: inst,
+        isImported: imp,
+        declarations: currentCase.declarations,
+      });
+      if (res && res.evaluation) {
+        updateCurrentCase({ applicability: res.evaluation });
+      }
+    } catch (err) {
+      console.warn('Backend applicability evaluation fallback:', err);
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  const handleToggleInstitutional = () => {
+    const nextVal = !isInstitutional;
+    setIsInstitutional(nextVal);
+    triggerEvaluation(nextVal, isImported);
+  };
+
+  const handleToggleImported = () => {
+    const nextVal = !isImported;
+    setIsImported(nextVal);
+    triggerEvaluation(isInstitutional, nextVal);
+  };
 
   return (
     <div className="space-y-4 max-w-6xl mx-auto pb-8">
@@ -92,27 +130,39 @@ export const ApplicabilityEngineView: React.FC<ApplicabilityEngineViewProps> = (
           <div className="text-[10px] text-slate-400 mt-0.5">Rule 2(l) Pre-Packaged</div>
         </div>
 
-        <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+        <button
+          type="button"
+          onClick={handleToggleInstitutional}
+          disabled={isEvaluating}
+          className="bg-white p-3 rounded-xl border border-slate-200 hover:border-blue-500 shadow-xs text-left cursor-pointer transition-colors"
+          title="Click to toggle Institutional vs Retail Trade Channel"
+        >
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
-            Trade Channel
+            Trade Channel (Toggle)
           </span>
-          <div className="font-bold text-xs text-slate-900 mt-1">
+          <div className="font-bold text-xs text-blue-700 mt-1">
             {isInstitutional ? 'Institutional' : 'Retail Consumer'}
           </div>
           <div className="text-[10px] text-slate-400 mt-0.5">
             {isInstitutional ? 'Rule 3(c) Exemption' : 'Standard Rule 6'}
           </div>
-        </div>
+        </button>
 
-        <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+        <button
+          type="button"
+          onClick={handleToggleImported}
+          disabled={isEvaluating}
+          className="bg-white p-3 rounded-xl border border-slate-200 hover:border-blue-500 shadow-xs text-left cursor-pointer transition-colors"
+          title="Click to toggle Domestic vs Imported Consignment Origin"
+        >
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
-            Consignment Origin
+            Consignment Origin (Toggle)
           </span>
-          <div className="font-bold text-xs text-slate-900 mt-1">
+          <div className="font-bold text-xs text-blue-700 mt-1">
             {isImported ? 'Imported' : 'Domestic'}
           </div>
           <div className="text-[10px] text-slate-400 mt-0.5">Rule 6(1)(ma)</div>
-        </div>
+        </button>
 
         <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs col-span-2 sm:col-span-1">
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">

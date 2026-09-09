@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BookOpenCheck,
   History,
@@ -8,13 +8,37 @@ import {
   Calendar,
   ExternalLink,
   Info,
+  Loader2,
 } from 'lucide-react';
 import { MOCK_RULE_LIBRARY } from '../../../data/mockData';
 import { DemoBadge } from '../../../components/common/DemoBadge';
+import { api } from '../../../services/api';
 
 export const RuleLibraryView: React.FC = () => {
   const [selectedVersion, setSelectedVersion] = useState('2026.3');
   const [searchQuery, setSearchQuery] = useState('');
+  const [rules, setRules] = useState<any[]>(MOCK_RULE_LIBRARY);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchRules = async () => {
+      try {
+        const res = await api.get<{ success: boolean; rules: any[] }>('/rules');
+        if (isMounted && res && res.rules && res.rules.length > 0) {
+          setRules(res.rules);
+        }
+      } catch (e) {
+        console.warn('Live rules fetch fallback:', e);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    fetchRules();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const versions = [
     { id: '2026.3', label: '2026.3 — Current Gazette (Active)', status: 'CURRENT' },
@@ -23,11 +47,11 @@ export const RuleLibraryView: React.FC = () => {
     { id: '2011', label: '2011 — Historical Base Standard', status: 'HISTORICAL' },
   ];
 
-  const filteredRules = MOCK_RULE_LIBRARY.filter(
+  const filteredRules = rules.filter(
     (r) =>
       r.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.rule.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.summary.toLowerCase().includes(searchQuery.toLowerCase())
+      (r.summary && r.summary.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (

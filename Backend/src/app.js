@@ -10,6 +10,7 @@ const caseRoute = require("./routes/case.js");
 const ocrRoute = require("./routes/ocrRoute.js");
 const applicabilityRoute = require("./routes/applicability.routes.js");
 const ruleRoute = require("./routes/rule.routes.js");
+const pdpRoute = require("./routes/pdp.routes.js");
 
 dns.setServers([
     '1.1.1.1',
@@ -19,7 +20,8 @@ const app = express();
 
 // CORS Middleware
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     if (req.method === "OPTIONS") {
@@ -40,5 +42,6 @@ app.use("/cases", caseRoute);
 app.use("/ocr", ocrRoute);
 app.use("/applicability", applicabilityRoute);
 app.use("/rules", ruleRoute);
+app.use("/pdp", pdpRoute);
 
 module.exports = app;

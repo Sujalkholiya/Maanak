@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, X, FolderCheck, Package, Building2, Shield, FileText } from 'lucide-react';
-import { DEMO_CASES, MOCK_MANUFACTURERS, MOCK_RULE_LIBRARY, MOCK_EVIDENCE_ITEMS } from '../../data/mockData';
+import { MOCK_MANUFACTURERS, MOCK_RULE_LIBRARY, MOCK_EVIDENCE_ITEMS } from '../../data/mockData';
+import { useInspectionCase } from '../../hooks/useInspectionCase';
+import { complianceService } from '../../services/complianceService';
 import { StatusBadge } from './StatusBadge';
 
 interface GlobalSearchModalProps {
@@ -17,12 +19,24 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   onNavigateView,
 }) => {
   const [query, setQuery] = useState('');
+  const { allCases } = useInspectionCase();
+  const [ruleLibrary, setRuleLibrary] = useState(MOCK_RULE_LIBRARY);
+
+  useEffect(() => {
+    if (isOpen) {
+      complianceService.getRuleLibrary()
+        .then((rules) => {
+          if (rules && rules.length > 0) setRuleLibrary(rules);
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const q = query.toLowerCase().trim();
 
-  const filteredCases = DEMO_CASES.filter(
+  const filteredCases = allCases.filter(
     (c) =>
       c.id.toLowerCase().includes(q) ||
       c.productName.toLowerCase().includes(q) ||
@@ -33,7 +47,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
     (m) => m.name.toLowerCase().includes(q) || m.registrationNo.toLowerCase().includes(q)
   );
 
-  const filteredRules = MOCK_RULE_LIBRARY.filter(
+  const filteredRules = ruleLibrary.filter(
     (r) => r.id.toLowerCase().includes(q) || r.rule.toLowerCase().includes(q)
   );
 

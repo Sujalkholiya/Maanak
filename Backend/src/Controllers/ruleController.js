@@ -352,4 +352,104 @@ const evaluateRules = async (req, res) => {
     }
 };
 
-module.exports = { evaluateRules, computeRulesEvaluation };
+const getRuleLibrary = async (req, res) => {
+    try {
+        const rules = [
+            {
+                id: "RULE-6-1-A",
+                rule: "Name and Complete Address of Manufacturer / Packer / Importer",
+                commodity: "All Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "Every package shall bear the name and complete address of the manufacturer, or where manufacturer is not the packer, the name and address of the packer, or in case of imported packages, name and address of importer."
+            },
+            {
+                id: "RULE-6-1-B",
+                rule: "Common or Generic Name of the Commodity",
+                commodity: "All Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "The common or generic name of the commodity contained in the package must be prominently declared on the principal display panel."
+            },
+            {
+                id: "RULE-6-1-C",
+                rule: "Net Quantity in Standard Metric Units",
+                commodity: "All Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "Net quantity shall be stated in terms of standard unit of weight or measure, using metric units (kg, g, L, ml, m, cm). Non-standard units are strictly regulated under Schedule II."
+            },
+            {
+                id: "RULE-6-1-D",
+                rule: "Month and Year of Manufacture / Packing / Import",
+                commodity: "All Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "The month and year in which the commodity is manufactured or pre-packed or imported shall be clearly indicated on the package."
+            },
+            {
+                id: "RULE-6-1-DA",
+                rule: "Unit Sale Price (USP) Representation",
+                commodity: "Commodities > 50g / 50ml",
+                version: "2026.3 — Current",
+                effectiveFrom: "2022-12-01 (Amended 2026.3)",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "Declaration of Unit Sale Price in rupees up to 2 decimal places per gram or per 100g, or per millilitre or per 100ml, or per piece, rounded off appropriately."
+            },
+            {
+                id: "RULE-6-1-E",
+                rule: "Maximum Retail Price (MRP) Declaration & Tamper Prohibition",
+                commodity: "All Retail Pre-Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "MRP inclusive of all taxes clearly printed. No person shall alter, obliterate or smudge the retail price or affix individual stickers to elevate the retail price contrary to Rule 18(2)."
+            },
+            {
+                id: "RULE-6-1-MA",
+                rule: "Country of Origin for Imported Consignments",
+                commodity: "Imported Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "Clear statement indicating the country of origin or manufacturer country for all imported commodities."
+            },
+            {
+                id: "RULE-6-1-N",
+                rule: "Consumer Care Contact Details",
+                commodity: "All Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "Name, address, telephone number, and email address of the person who can be contacted by the consumer in case of consumer grievance."
+            },
+            {
+                id: "RULE-7-1",
+                rule: "Principal Display Panel Dimensions & Character Height",
+                commodity: "All Packaged Commodities",
+                version: "2026.3 — Current",
+                effectiveFrom: "2026-01-01",
+                status: "ACTIVE",
+                mandatory: true,
+                summary: "Schedule II specifies exact minimum numeral and letter heights proportional to the area of the principal display panel."
+            }
+        ];
+        return res.status(200).json({ success: true, count: rules.length, rules });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Failed to fetch rules", error: error.message });
+    }
+};
+
+module.exports = { evaluateRules, computeRulesEvaluation, getRuleLibrary };
